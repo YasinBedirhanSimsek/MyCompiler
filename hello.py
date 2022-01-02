@@ -1,9 +1,9 @@
-from sly.sly import Lexer
+from sly import Lexer
 
 class CalcLexer(Lexer):
     # Set of token names.   This is always required
     tokens = { ID, NUMBER, PLUS, MINUS, TIMES,
-               DIVIDE, ASSIGN, LPAREN, RPAREN, LCURLY, RCURLY, IF, OR, GREATERTHAN, AND, NOTEQUAL }
+               DIVIDE, ASSIGN, LPAREN, RPAREN, LCURLY, RCURLY, IF, OR, GREATERTHAN, AND, NOTEQUAL, LOWERTHAN, LOWER, GREATER  }
 
     # String containing ignored characters (between tokens)
     ignore = ' \t'
@@ -25,22 +25,26 @@ class CalcLexer(Lexer):
     RPAREN  = r'\)'
     LCURLY = r'\{'
     RCURLY = r'\}'
-<<<<<<< HEAD
-    IF = r'if'
+
+
+    #IF = r'if'
     # EQUAL = r'\==' #equal does not work it see only one "=" symbol
     GREATERTHAN = r'<='
+    LOWERTHAN = r'>='
+    LOWER = r'>'
+    GREATER = r'<'
     OR = r'\|'
     AND = r'\&'
     NOTEQUAL = r'!='
+    
 
-=======
     ID['if'] = IF
->>>>>>> 9f776f5da6dd60b311cf8e843ffe9b466861d304
+
 
 if __name__ == '__main__':
     data = '''x = 3 + 0x42 anan
                 * (s    # This is a comment
-                    - t) if { asd } | & !='''
+                    - t) if { asd } | & != > < >= <='''
     lexer = CalcLexer()
 
     token_list = []
