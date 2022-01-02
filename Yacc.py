@@ -7,10 +7,9 @@ class CalcParser(Parser):
     tokens = CalcLexer.tokens
 
     precedence = (
-
-        ('left', PLUS, MINUS),
-        ('left', TIMES, DIVIDE),
-
+       ('left', PLUS, MINUS),
+       ('left', TIMES, DIVIDE),
+       ('right', UMINUS),
     )
 
     def __init__(self):
@@ -21,6 +20,10 @@ class CalcParser(Parser):
     #STATEMENT : ASSIGNMENT
 
     #STATEMENT : EXPRESSION
+
+    #STATEMENT : LOOP
+
+    #STATEMENT : CONDITIONAL
 
     @_("ASSIGNMENT")
     def STATEMENT(self, production):
@@ -43,23 +46,40 @@ class CalcParser(Parser):
 
     #######################################################################################
 
-    #EXPRESSION : EXPRESSION + ID
-    @_("EXPRESSION PLUS ID")
+    #EXPRESSION : EXPRESSION + EXPRESSION
+    @_("EXPRESSION PLUS EXPRESSION")
     def EXPRESSION(self, production):
-        try:
-            return production.EXPRESSION + self.names[production.ID]
-        except LookupError:
-            print(f'Undefined name {production.ID!r}')
+        return production.EXPRESSION0 + production.EXPRESSION1
 
-    #EXPRESSION : EXPRESSION + NUMBER
-    @_("EXPRESSION PLUS NUMBER")
+    #EXPRESSION : EXPRESSION - EXPRESSION
+    @_("EXPRESSION MINUS EXPRESSION")
     def EXPRESSION(self, production):
-        return production.EXPRESSION + production.NUMBER
+        return production.EXPRESSION0 - production.EXPRESSION1
+
+    #EXPRESSION : EXPRESSION * EXPRESSION   
+    @_("EXPRESSION TIMES EXPRESSION")
+    def EXPRESSION(self, production):
+        return (production.EXPRESSION0 * production.EXPRESSION1)
+
+    #EXPRESSION : EXPRESSION / EXPRESSION   
+    @_("EXPRESSION DIVIDE EXPRESSION")
+    def EXPRESSION(self, production):
+        return (production.EXPRESSION0 / production.EXPRESSION1)
+
+    #EXPRESSION : -EXPRESSION 
+    @_('MINUS EXPRESSION %prec UMINUS')
+    def EXPRESSION(self, production):
+        return -production.EXPRESSION
 
     #EXPRESSION : NUMBER
     @_("NUMBER")
     def EXPRESSION(self, production):
         return production.NUMBER
+
+    #EXPRESSION : ( EXPRESSION )
+    @_('LPAREN EXPRESSION RPAREN')
+    def EXPRESSION(self, production):
+        return production.EXPRESSION
 
     #EXPRESSION : ID
     @_("ID")
@@ -68,7 +88,7 @@ class CalcParser(Parser):
             return self.names[production.ID]
         except LookupError:
             print(f'Undefined name {production.ID!r}')
-    
+
     #######################################################################################
 
     
