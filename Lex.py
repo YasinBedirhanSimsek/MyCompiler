@@ -63,10 +63,13 @@ class CalcLexer(Lexer):
     #LOGIC
     GREATER_THAN_EQ   = r'>='
     GREATER_THAN      = r'>'
+    #BIGGER = r'(>=|>)'
+
     
     LOWER_THAN_EQ  = r'<='
     LOWER_THAN     = r'<'
-    
+    #SMALLER = r'(<=|<)'
+
     IS_EQUAL     = r'\?='
     IS_NOT_EQUAL = r'\!='
 
