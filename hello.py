@@ -1,4 +1,4 @@
-from sly import Lexer
+from sly.sly import Lexer
 
 class CalcLexer(Lexer):
     # Set of token names.   This is always required
@@ -25,7 +25,7 @@ class CalcLexer(Lexer):
     RPAREN  = r'\)'
     LCURLY = r'\{'
     RCURLY = r'\}'
-    IF = r'if'
+    ID['if'] = IF
 
 if __name__ == '__main__':
     data = '''x = 3 + 0x42 anan
