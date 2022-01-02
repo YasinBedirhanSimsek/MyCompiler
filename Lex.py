@@ -19,8 +19,9 @@ class CalcLexer(Lexer):
         BITWISE_OR, BITWISE_AND, BITWISE_NOT,
         
         #LOGIC
-        GREATER_THAN, GREATER_THAN_EQ, LOWER_THAN, LOWER_THAN_EQ,
-
+        #GREATER_THAN, GREATER_THAN_EQ, LOWER_THAN, LOWER_THAN_EQ,
+        BIGGER, SMALLER,
+        
         IS_EQUAL, IS_NOT_EQUAL,
         
         #CONDITIONAL
@@ -60,12 +61,15 @@ class CalcLexer(Lexer):
     BITWISE_NOT = r'\!'
 
     #LOGIC
-    GREATER_THAN_EQ   = r'>='
-    GREATER_THAN      = r'>'
+    #GREATER_THAN_EQ   = r'>='
+    #GREATER_THAN      = r'>'
+    BIGGER = r'(>=|>)'
+
     
-    LOWER_THAN_EQ  = r'<='
-    LOWER_THAN     = r'<'
-    
+    #LOWER_THAN_EQ  = r'<='
+    #LOWER_THAN     = r'<'
+    SMALLER = r'(<=|<)'
+
     IS_EQUAL     = r'\?='
     IS_NOT_EQUAL = r'\!='
 
