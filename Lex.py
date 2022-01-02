@@ -21,7 +21,7 @@ class CalcLexer(Lexer):
         #LOGIC
         GREATER_THAN, GREATER_THAN_EQ, LOWER_THAN, LOWER_THAN_EQ,
 
-        IS_EQUAL, IS_NOT_EQUAL,
+        OR, AND, IS_EQUAL, IS_NOT_EQUAL,
         
         #CONDITIONAL
         IF, ELSE_IF, ELSE,
@@ -53,6 +53,7 @@ class CalcLexer(Lexer):
     MINUS   = r'-'
     TIMES   = r'\*'
     DIVIDE  = r'/'
+
     ASSIGN  = r'='
 
     BITWISE_OR  = r'\|'
@@ -69,6 +70,9 @@ class CalcLexer(Lexer):
     IS_EQUAL     = r'\?='
     IS_NOT_EQUAL = r'\!='
 
+    ID['or']  = OR
+    ID['and'] = AND
+
     #CONDITIONAL
     ID['if']      = IF
     ID['else if'] = ELSE_IF
@@ -78,7 +82,6 @@ class CalcLexer(Lexer):
     ID['while'] = WHILE    
     ID['for']   = FOR 
     ID['break'] = BREAK
-
 
     ############################################################
 
