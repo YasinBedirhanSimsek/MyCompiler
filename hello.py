@@ -1,4 +1,4 @@
-from sly import Lexer
+from sly.sly import Lexer
 
 class CalcLexer(Lexer):
     # Set of token names.   This is always required
@@ -25,6 +25,7 @@ class CalcLexer(Lexer):
     RPAREN  = r'\)'
     LCURLY = r'\{'
     RCURLY = r'\}'
+<<<<<<< HEAD
     IF = r'if'
     # EQUAL = r'\==' #equal does not work it see only one "=" symbol
     GREATERTHAN = r'<='
@@ -32,6 +33,9 @@ class CalcLexer(Lexer):
     AND = r'\&'
     NOTEQUAL = r'!='
 
+=======
+    ID['if'] = IF
+>>>>>>> 9f776f5da6dd60b311cf8e843ffe9b466861d304
 
 if __name__ == '__main__':
     data = '''x = 3 + 0x42 anan
