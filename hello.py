@@ -1,10 +1,9 @@
-from sly.sly import Lexer
-from sly.sly.lex import Token
+from sly import Lexer
 
 class CalcLexer(Lexer):
     # Set of token names.   This is always required
     tokens = { ID, NUMBER, PLUS, MINUS, TIMES,
-               DIVIDE, ASSIGN, LPAREN, RPAREN}
+               DIVIDE, ASSIGN, LPAREN, RPAREN, LCURLY, RCURLY, IF }
 
     # String containing ignored characters (between tokens)
     ignore = ' \t'
@@ -24,11 +23,14 @@ class CalcLexer(Lexer):
     ASSIGN  = r'='
     LPAREN  = r'\('
     RPAREN  = r'\)'
+    LCURLY = r'\{'
+    RCURLY = r'\}'
+    IF = r'if'
 
 if __name__ == '__main__':
     data = '''x = 3 + 0x42 anan
                 * (s    # This is a comment
-                    - t)'''
+                    - t) if { asd }'''
     lexer = CalcLexer()
 
     token_list = []
