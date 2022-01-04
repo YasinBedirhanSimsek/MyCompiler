@@ -37,16 +37,31 @@ class CalcParser(Parser):
         print(production.EXPRESSION)
         return
 
-    #######################################################################################
+    #######################################################################################    
+    #Component Expression
+    @_('CEXPR')  
+    def STATEMENT(self, production):       
+        return production.CEXPR
     
     #ASSIGNMENT : ID = EXPRESSION
-
+    
     @_("ID ASSIGN EXPRESSION")
     def ASSIGNMENT(self, production):
+        print('DEBUG:', 'ID ASSIGN EXPRESSION', production.ID, production.EXPRESSION)
         self.names[production.ID] = production.EXPRESSION
-
+    
     #######################################################################################
+    
+    
+    @_('IF EXPRESSION STATEMENT ELSE STATEMENT')
+    def CEXPR(self, production):
+        print('DEBUG:', production.EXPRESSION, production.STATEMENT0, production.STATEMENT1)
+        return production.STATEMENT0 if production.EXPRESSION else production.STATEMENT1
 
+    @_('IF EXPRESSION EXPRESSION ELSE EXPRESSION')
+    def CEXPR(self, production):
+        print('DEBUG:', production.EXPRESSION0, production.EXPRESSION1, production.EXPRESSION2)
+        return production.EXPRESSION1 if production.EXPRESSION0 else production.EXPRESSION2
 
     ##########################################################################################
     
