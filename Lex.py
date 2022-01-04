@@ -14,17 +14,17 @@ class CalcLexer(Lexer):
         LCURLY, RCURLY,
         
         #OPERATIONS
-        PLUS, MINUS, TIMES, DIVIDE, ASSIGN,
+        PLUS, MINUS, TIMES, DIVIDE, ASSIGN, MOD, EXPONENT, # I added MOD and EXPONENT operation
         
         BITWISE_OR, BITWISE_AND, BITWISE_NOT,
         
         #LOGIC
         GREATER_THAN, GREATER_THAN_EQ, LOWER_THAN, LOWER_THAN_EQ,
 
-        OR, AND, IS_EQUAL, IS_NOT_EQUAL,
+        OR, AND,  IS_NOT_EQUAL, EQUALS, # I added EQUALS logic token -> "IS_EQUAL" dont need <-
         
         #CONDITIONAL
-        IF, ELSE_IF, ELSE,
+        IF, ELSE_IF, ELSE, THEN,
 
         #LOOPS
         WHILE, FOR, BREAK  
@@ -49,10 +49,13 @@ class CalcLexer(Lexer):
     RCURLY  = r'\}'
 
     #OPERATIONS
+    EXPONENT = r'\*\*' #  <-------
+    EQUALS = r'=='     #  <-------
     PLUS    = r'\+'
     MINUS   = r'-'
     TIMES   = r'\*'
     DIVIDE  = r'/'
+    MOD = r'%'
 
     ASSIGN  = r'='
     
@@ -67,7 +70,7 @@ class CalcLexer(Lexer):
     LOWER_THAN_EQ  = r'<='
     LOWER_THAN     = r'<'
 
-    IS_EQUAL     = r'\?='
+    #IS_EQUAL     = r'\?=' I think we don't need this line because I already add EQUALS operation
     IS_NOT_EQUAL = r'\!='
 
     ID['or']  = OR
@@ -88,5 +91,3 @@ class CalcLexer(Lexer):
     def NUMBER(self, t:Token):
         t.value = int(t.value)
         return t
-
-    

@@ -7,6 +7,7 @@ class CalcParser(Parser):
     tokens = CalcLexer.tokens
 
     precedence = (
+       ('left', EQUALS),
        ('left', PLUS, MINUS),
        ('left', TIMES, DIVIDE),
        ('right', UMINUS),
@@ -46,6 +47,14 @@ class CalcParser(Parser):
 
     #######################################################################################
 
+
+    ##########################################################################################
+    
+    # ------------------> EXPRESSION : EXPRESSION ** EXPRESSION   <------------------
+    @_('EXPRESSION EXPONENT EXPRESSION')
+    def EXPRESSION(self, production):
+        return production.EXPRESSION0 ** production.EXPRESSION1
+
     #EXPRESSION : EXPRESSION + EXPRESSION
     @_("EXPRESSION PLUS EXPRESSION")
     def EXPRESSION(self, production):
@@ -65,6 +74,16 @@ class CalcParser(Parser):
     @_("EXPRESSION DIVIDE EXPRESSION")
     def EXPRESSION(self, production):
         return (production.EXPRESSION0 / production.EXPRESSION1)
+    
+    # ------------------> EXPRESSION : EXPRESSION % EXPRESSION   <------------------
+    @_('EXPRESSION MOD EXPRESSION')
+    def EXPRESSION(self, production):
+        return production.EXPRESSION0 % production.EXPRESSION1
+    
+    # ------------------> EXPRESSION : EXPRESSION == EXPRESSION    <-----------------
+    @_('EXPRESSION EQUALS EXPRESSION')
+    def EXPRESSION(self, production):
+        return production.EXPRESSION0 == production.EXPRESSION1
 
     #EXPRESSION : -EXPRESSION 
     @_('MINUS EXPRESSION %prec UMINUS')
