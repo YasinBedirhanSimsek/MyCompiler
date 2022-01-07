@@ -17,6 +17,7 @@ class CalcParser(Parser):
 
     def __init__(self):
         self.names = { }
+        self.functions = { }
 
     ############################## Grammar rules and actions ##############################
 
@@ -28,6 +29,8 @@ class CalcParser(Parser):
 
     #STATEMENT : CONDITIONAL
 
+    #STATEMENT : FUNCTION
+
     @_('ASSIGNMENT')
     def STATEMENT(self, production):
         return ('NODE_STATEMENT', production.ASSIGNMENT)
@@ -36,9 +39,17 @@ class CalcParser(Parser):
     def STATEMENT(self, production):
         return ('NODE_STATEMENT', production.EXPRESSION)
 
+    @_('LOOP')
+    def STATEMENT(self, production):
+        return ('NODE_STATEMENT', production.LOOP) 
+
     @_('CONDITIONAL')
     def STATEMENT(self, production):
         return ('NODE_STATEMENT', production.CONDITIONAL) 
+
+    @_('FUNCTION')
+    def STATEMENT(self, production):
+        return ('NODE_STATEMENT', production.FUNCTION) 
 
     ####################################################################################### 
      
@@ -51,7 +62,12 @@ class CalcParser(Parser):
     @_("ID ASSIGN EXPRESSION COMMA ASSIGNMENT")
     def ASSIGNMENT(self, production):
         return ('NODE_ASSIGNMENT_EXP', production.ID, production.EXPRESSION, production.ASSIGNMENT)
-    
+
+    ########################################################################################## 
+
+    @_("WHILE LPAREN EXPRESSION RPAREN LCURLY STATEMENT RCURLY")
+    def LOOP(self, production):
+        return ('NODE_WHILE', production.EXPRESSION, production.STATEMENT)
 
     ##########################################################################################
 
@@ -71,7 +87,21 @@ class CalcParser(Parser):
         return ("NODE_CONDITIONAL_ELSE_CONDITIONAL", production.EXPRESSION, production.STATEMENT, production.CONDITIONAL)
 
     ##########################################################################################  
-      
+
+    #FUNCTION : FUNCTION_DEFINITION
+
+    #FUNCTION : FUNCTION_CALL
+
+    @_('FUNCTION ID LPAREN PARAM_LIST RPAREN LCURLY STATEMENT RCURLY')  
+    def FUNCTION_DEFINITON(self, production):
+        return
+
+    @_('ID LPAREN PARAM_LIST RPAREN')  
+    def FUNCTION_DEFINITON(self, production):
+        return
+
+    ########################################################################################## 
+
     #EXPRESSION : NUMBER
     @_('NUMBER')
     def EXPRESSION(self, production):
@@ -154,7 +184,6 @@ class CalcParser(Parser):
             except LookupError:
                 print(f'Undefined name {ast[1]!r}')
 
-
         elif(ast[0] == 'NODE_ASSIGNMENT_EXP'): # <----------- New Line
             try:
                 self.names[ast[1]] = self.eval_ast(ast[2])     
@@ -162,7 +191,6 @@ class CalcParser(Parser):
             except LookupError:
                 print(f'Undefined name {ast[1]!r}')
         
-
         #############################################
 
         elif(ast[0] == 'NODE_CONDITIONAL'):
@@ -176,14 +204,24 @@ class CalcParser(Parser):
         
         #############################################
 
+        elif(ast[0] == 'NODE_WHILE'):
+            loop_result = None
+
+            while( self.eval_ast(ast[1]) == True ):
+                loop_result = self.eval_ast(ast[2]) 
+  
+            return loop_result
+           
+        #############################################
+
         elif(ast[0] == 'NODE_ID'):
             return self.names[ast[1]]
 
         elif(ast[0] == 'NODE_NUMBER'):
             return ast[1]
    
-        #elif(ast[0] == 'NODE_LP_EXPRESSION_RP'):
-         #  return self.eval_ast(ast[2])
+        elif(ast[0] == 'NODE_LP_EXPRESSION_RP'):
+            return self.eval_ast(ast[2])
 
         elif(ast[0] == 'NODE_UMINUS'):
             return -self.eval_ast(ast[1])

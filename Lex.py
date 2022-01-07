@@ -11,7 +11,7 @@ class CalcLexer(Lexer):
         #SYMBOLS
         LPAREN, RPAREN,
         
-        LCURLY, RCURLY, COMMA, # <-------- New Token COMMA
+        LCURLY, RCURLY, COMMA, 
         
         #OPERATIONS
         PLUS, MINUS, TIMES, DIVIDE, ASSIGN, MOD, EXPONENT, 
@@ -22,9 +22,15 @@ class CalcLexer(Lexer):
         GREATER_THAN, GREATER_THAN_EQ, LOWER_THAN, LOWER_THAN_EQ,
 
         OR, AND,  IS_NOT_EQUAL, IS_EQUAL,
-        
+
+        #LOOP
+        WHILE,
+
         #CONDITIONAL
-        IF, ELSE
+        IF, ELSE,
+
+        #FUNCTION
+        FUNCTION
     }
 
     # String containing ignored characters (between tokens)
@@ -77,6 +83,10 @@ class CalcLexer(Lexer):
     ID['and']  = AND
 
     #LOOPS
+    ID['while'] = WHILE
+
+    #Function
+    ID['function'] = FUNCTION
 
     ############################################################
 

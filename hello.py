@@ -2,13 +2,9 @@ from sly.lex import Token
 from Lex import CalcLexer
 from Yacc import CalcParser
 
-#TO-DO:
-#String
-#If
-#While
 #Function
 
-text = '''if (3==5) { 3 + 2 } else if (3==4) { 1*1 } else if (3==1) { 49 } else { 3 * 2 }'''
+#text = '''if (3==5) { 3 + 2 } else if (3==4) { 1*1 } else if (3==1) { 49 } else { 3 * 2 }'''
 
 if __name__ == '__main__':
                  
@@ -17,8 +13,7 @@ if __name__ == '__main__':
 
     while True:
         try:
-            #text = input('calc > ')
+            text = input('calc > ')
             result = parser.parse(lexer.tokenize(text))
-            break
         except EOFError:
             break
