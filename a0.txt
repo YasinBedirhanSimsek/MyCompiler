@@ -1,0 +1,19 @@
+#CONDITIONAL : IF_BLOCK
+    @_('IF_BLOCK')
+    def CONDITIONAL(self, production):
+        return ('NODE_CONDITIONAL_0', production.IF_BLOCK)
+
+    #CONDITIONAL : IF_BLOCK ELSE_BLOCK
+    @_('IF_BLOCK ELSE_BLOCK')
+    def CONDITIONAL(self, production):
+        return ('NODE_CONDITIONAL_1', production.IF_BLOCK, production.ELSE_BLOCK)
+
+    #CONDITIONAL : IF_BLOCK ELSE_IF_BLOCK
+    @_('IF_BLOCK ELSE_IF_BLOCK')
+    def CONDITIONAL(self, production):
+        return ('NODE_CONDITIONAL_2', production.IF_BLOCK, production.ELSE_IF_BLOCK)
+
+    #CONDITIONAL : IF_BLOCK ELSE_IF_BLOCK ELSE_BLOCK
+    @_('IF_BLOCK ELSE_IF_BLOCK ELSE_BLOCK')
+    def CONDITIONAL(self, production):
+        return ('NODE_CONDITIONAL_3', production.IF_BLOCK, production.ELSE_IF_BLOCK, production.ELSE_BLOCK)

@@ -7,7 +7,7 @@ class CalcParser(Parser):
 
     tokens = CalcLexer.tokens
 
-    precedence = (  
+    precedence = (
        ('left', IS_EQUAL, IS_NOT_EQUAL),
        ('left', PLUS, MINUS),
        ('left', DIVIDE, TIMES, MOD),
@@ -28,41 +28,46 @@ class CalcParser(Parser):
 
     #STATEMENT : CONDITIONAL
 
-    @_("ASSIGNMENT")
+    @_('ASSIGNMENT')
     def STATEMENT(self, production):
         return ('NODE_STATEMENT', production.ASSIGNMENT)
 
-    @_("EXPRESSION")
+    @_('EXPRESSION')
     def STATEMENT(self, production):
         return ('NODE_STATEMENT', production.EXPRESSION)
 
-    @_("CONDITIONAL")
+    @_('CONDITIONAL')
     def STATEMENT(self, production):
         return ('NODE_STATEMENT', production.CONDITIONAL) 
 
     ####################################################################################### 
      
     #ASSIGNMENT : ID = EXPRESSION
-    @_("ID ASSIGN EXPRESSION")
+    @_('ID ASSIGN EXPRESSION')
     def ASSIGNMENT(self, production):
         return ('NODE_ASSIGNMENT', production.ID, production.EXPRESSION)
     
     ##########################################################################################
 
-    #CONDITIONAL : IF ( EXPRESSION ) { STATEMENT }
-    @_("IF LPAREN EXPRESSION RPAREN LCURLY STATEMENT RCURLY ")
+    #CONDITIONAL : IF ( EXPRESSION ) { STATEMENT } 
+    @_('IF LPAREN EXPRESSION RPAREN LCURLY STATEMENT RCURLY')
     def CONDITIONAL(self, production):   
-        return ('NODE_IF', production.EXPRESSION, production.STATEMENT)
-
+        return ("NODE_CONDITIONAL", production.EXPRESSION, production.STATEMENT)
+        
     #CONDITIONAL : IF ( EXPRESSION ) { STATEMENT } ELSE { STATEMENT } 
-    @_("IF LPAREN EXPRESSION RPAREN LCURLY STATEMENT RCURLY ")
+    @_('IF LPAREN EXPRESSION RPAREN LCURLY STATEMENT RCURLY ELSE LCURLY STATEMENT RCURLY')
     def CONDITIONAL(self, production):   
-        return ('NODE_IF', production.EXPRESSION, production.STATEMENT0, production.STATEMENT1)
+        return ("NODE_CONDITIONAL_ELSE", production.EXPRESSION, production.STATEMENT0, production.STATEMENT1)
+
+    #CONDITIONAL : IF ( EXPRESSION ) { STATEMENT } ELSE CONDITIONAL 
+    @_('IF LPAREN EXPRESSION RPAREN LCURLY STATEMENT RCURLY ELSE CONDITIONAL')
+    def CONDITIONAL(self, production):   
+        return ("NODE_CONDITIONAL_ELSE_CONDITIONAL", production.EXPRESSION, production.STATEMENT, production.CONDITIONAL)
 
     ##########################################################################################  
       
     #EXPRESSION : NUMBER
-    @_("NUMBER")
+    @_('NUMBER')
     def EXPRESSION(self, production):
         return ('NODE_NUMBER', production.NUMBER)
 
@@ -145,12 +150,15 @@ class CalcParser(Parser):
 
         #############################################
 
-        elif(ast[0] == 'NODE_IF'):
-            return self.eval_ast(ast[2]) if self.eval_ast(ast[1]) == True else None
+        elif(ast[0] == 'NODE_CONDITIONAL'):
+            return self.eval_ast(ast[2]) if (self.eval_ast(ast[1]) == True) else None
 
-        elif(ast[0] == 'NODE_IF_ELSE'):  
-            return self.eval_ast(ast[2]) if self.eval_ast(ast[1]) == True else self.eval_ast(ast[1])
+        elif(ast[0] == 'NODE_CONDITIONAL_ELSE'):
+            return self.eval_ast(ast[2]) if (self.eval_ast(ast[1]) == True) else self.eval_ast(ast[3])
 
+        elif(ast[0] == 'NODE_CONDITIONAL_ELSE_CONDITIONAL'):
+            return self.eval_ast(ast[2]) if (self.eval_ast(ast[1]) == True) else self.eval_ast(ast[3])
+        
         #############################################
 
         elif(ast[0] == 'NODE_ID'):

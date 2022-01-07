@@ -8,7 +8,7 @@ from Yacc import CalcParser
 #While
 #Function
 
-text = '''( (3) * 3 + 2 )'''
+text = '''if (3==5) { 3 + 2 } else if (3==4) { 1*1 } else if (3==1) { 49 } else { 3 * 2 }'''
 
 if __name__ == '__main__':
                  
