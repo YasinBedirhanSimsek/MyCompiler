@@ -1,103 +1,102 @@
 Grammar:
 
 Rule 0     S' -> STATEMENT
-Rule 1     STATEMENT -> CONDITIONAL
-Rule 2     STATEMENT -> EXPRESSION
-Rule 3     STATEMENT -> ASSIGNMENT
+Rule 1     STATEMENT -> EXPRESSION
+Rule 2     STATEMENT -> ASSIGNMENT
+Rule 3     ASSIGNMENT -> ID ASSIGN EXPRESSION COMMA ASSIGNMENT
 Rule 4     ASSIGNMENT -> ID ASSIGN EXPRESSION
-Rule 5     CONDITIONAL -> IF LPAREN EXPRESSION RPAREN LCURLY STATEMENT RCURLY
-Rule 6     EXPRESSION -> EXPRESSION IS_NOT_EQUAL EXPRESSION  [precedence=left, level=1]
-Rule 7     EXPRESSION -> EXPRESSION IS_EQUAL EXPRESSION  [precedence=left, level=1]
-Rule 8     EXPRESSION -> EXPRESSION EXPONENT EXPRESSION  [precedence=right, level=5]
-Rule 9     EXPRESSION -> EXPRESSION MOD EXPRESSION  [precedence=left, level=3]
-Rule 10    EXPRESSION -> EXPRESSION DIVIDE EXPRESSION  [precedence=left, level=3]
-Rule 11    EXPRESSION -> EXPRESSION TIMES EXPRESSION  [precedence=left, level=3]
-Rule 12    EXPRESSION -> EXPRESSION MINUS EXPRESSION  [precedence=left, level=2]
-Rule 13    EXPRESSION -> EXPRESSION PLUS EXPRESSION  [precedence=left, level=2]
-Rule 14    EXPRESSION -> MINUS EXPRESSION  [precedence=right, level=4]
-Rule 15    EXPRESSION -> LPAREN EXPRESSION RPAREN
-Rule 16    EXPRESSION -> ID
-Rule 17    EXPRESSION -> NUMBER
+Rule 5     EXPRESSION -> EXPRESSION IS_NOT_EQUAL EXPRESSION  [precedence=left, level=1]
+Rule 6     EXPRESSION -> EXPRESSION IS_EQUAL EXPRESSION  [precedence=left, level=1]
+Rule 7     EXPRESSION -> EXPRESSION EXPONENT EXPRESSION  [precedence=right, level=5]
+Rule 8     EXPRESSION -> EXPRESSION MOD EXPRESSION  [precedence=left, level=3]
+Rule 9     EXPRESSION -> EXPRESSION DIVIDE EXPRESSION  [precedence=left, level=3]
+Rule 10    EXPRESSION -> EXPRESSION TIMES EXPRESSION  [precedence=left, level=3]
+Rule 11    EXPRESSION -> EXPRESSION MINUS EXPRESSION  [precedence=left, level=2]
+Rule 12    EXPRESSION -> EXPRESSION PLUS EXPRESSION  [precedence=left, level=2]
+Rule 13    EXPRESSION -> MINUS EXPRESSION  [precedence=right, level=4]
+Rule 14    EXPRESSION -> LPAREN EXPRESSION RPAREN
+Rule 15    EXPRESSION -> ID
+Rule 16    EXPRESSION -> NUMBER
 
 Unused terminals:
 
-    BITWISE_AND
-    LOWER_THAN_EQ
-    GREATER_THAN_EQ
-    ELSE
-    LOWER_THAN
-    OR
     AND
-    GREATER_THAN
+    OR
+    LCURLY
+    ELSE
+    GREATER_THAN_EQ
+    IF
     BITWISE_OR
+    LOWER_THAN
+    BITWISE_AND
+    RCURLY
+    LOWER_THAN_EQ
+    GREATER_THAN
 
 Terminals, with rules where they appear:
 
 AND                  : 
-ASSIGN               : 4
+ASSIGN               : 3 4
 BITWISE_AND          : 
 BITWISE_OR           : 
-DIVIDE               : 10
+COMMA                : 3
+DIVIDE               : 9
 ELSE                 : 
-EXPONENT             : 8
+EXPONENT             : 7
 GREATER_THAN         : 
 GREATER_THAN_EQ      : 
-ID                   : 4 16
-IF                   : 5
-IS_EQUAL             : 7
-IS_NOT_EQUAL         : 6
-LCURLY               : 5
+ID                   : 3 4 15
+IF                   : 
+IS_EQUAL             : 6
+IS_NOT_EQUAL         : 5
+LCURLY               : 
 LOWER_THAN           : 
 LOWER_THAN_EQ        : 
-LPAREN               : 5 15
-MINUS                : 12 14
-MOD                  : 9
-NUMBER               : 17
+LPAREN               : 14
+MINUS                : 11 13
+MOD                  : 8
+NUMBER               : 16
 OR                   : 
-PLUS                 : 13
-RCURLY               : 5
-RPAREN               : 5 15
-TIMES                : 11
+PLUS                 : 12
+RCURLY               : 
+RPAREN               : 14
+TIMES                : 10
 error                : 
 
 Nonterminals, with rules where they appear:
 
-ASSIGNMENT           : 3
-CONDITIONAL          : 1
-EXPRESSION           : 2 4 5 6 6 7 7 8 8 9 9 10 10 11 11 12 12 13 13 14 15
-STATEMENT            : 5 0
+ASSIGNMENT           : 2 3
+EXPRESSION           : 1 3 4 5 5 6 6 7 7 8 8 9 9 10 10 11 11 12 12 13 14
+STATEMENT            : 0
 
 
 state 0
 
     (0) S' -> . STATEMENT
-    (1) STATEMENT -> . CONDITIONAL
-    (2) STATEMENT -> . EXPRESSION
-    (3) STATEMENT -> . ASSIGNMENT
-    (5) CONDITIONAL -> . IF LPAREN EXPRESSION RPAREN LCURLY STATEMENT RCURLY
-    (6) EXPRESSION -> . EXPRESSION IS_NOT_EQUAL EXPRESSION
-    (7) EXPRESSION -> . EXPRESSION IS_EQUAL EXPRESSION
-    (8) EXPRESSION -> . EXPRESSION EXPONENT EXPRESSION
-    (9) EXPRESSION -> . EXPRESSION MOD EXPRESSION
-    (10) EXPRESSION -> . EXPRESSION DIVIDE EXPRESSION
-    (11) EXPRESSION -> . EXPRESSION TIMES EXPRESSION
-    (12) EXPRESSION -> . EXPRESSION MINUS EXPRESSION
-    (13) EXPRESSION -> . EXPRESSION PLUS EXPRESSION
-    (14) EXPRESSION -> . MINUS EXPRESSION
-    (15) EXPRESSION -> . LPAREN EXPRESSION RPAREN
-    (16) EXPRESSION -> . ID
-    (17) EXPRESSION -> . NUMBER
+    (1) STATEMENT -> . EXPRESSION
+    (2) STATEMENT -> . ASSIGNMENT
+    (5) EXPRESSION -> . EXPRESSION IS_NOT_EQUAL EXPRESSION
+    (6) EXPRESSION -> . EXPRESSION IS_EQUAL EXPRESSION
+    (7) EXPRESSION -> . EXPRESSION EXPONENT EXPRESSION
+    (8) EXPRESSION -> . EXPRESSION MOD EXPRESSION
+    (9) EXPRESSION -> . EXPRESSION DIVIDE EXPRESSION
+    (10) EXPRESSION -> . EXPRESSION TIMES EXPRESSION
+    (11) EXPRESSION -> . EXPRESSION MINUS EXPRESSION
+    (12) EXPRESSION -> . EXPRESSION PLUS EXPRESSION
+    (13) EXPRESSION -> . MINUS EXPRESSION
+    (14) EXPRESSION -> . LPAREN EXPRESSION RPAREN
+    (15) EXPRESSION -> . ID
+    (16) EXPRESSION -> . NUMBER
+    (3) ASSIGNMENT -> . ID ASSIGN EXPRESSION COMMA ASSIGNMENT
     (4) ASSIGNMENT -> . ID ASSIGN EXPRESSION
-    IF              shift and go to state 5
-    MINUS           shift and go to state 7
-    LPAREN          shift and go to state 6
-    ID              shift and go to state 8
-    NUMBER          shift and go to state 9
+    MINUS           shift and go to state 4
+    LPAREN          shift and go to state 5
+    ID              shift and go to state 6
+    NUMBER          shift and go to state 7
 
     STATEMENT                      shift and go to state 1
-    CONDITIONAL                    shift and go to state 2
-    EXPRESSION                     shift and go to state 3
-    ASSIGNMENT                     shift and go to state 4
+    EXPRESSION                     shift and go to state 2
+    ASSIGNMENT                     shift and go to state 3
 
 state 1
 
@@ -106,704 +105,619 @@ state 1
 
 state 2
 
-    (1) STATEMENT -> CONDITIONAL .
-    $end            reduce using rule 1 (STATEMENT -> CONDITIONAL .)
-    RCURLY          reduce using rule 1 (STATEMENT -> CONDITIONAL .)
+    (1) STATEMENT -> EXPRESSION .
+    (5) EXPRESSION -> EXPRESSION . IS_NOT_EQUAL EXPRESSION
+    (6) EXPRESSION -> EXPRESSION . IS_EQUAL EXPRESSION
+    (7) EXPRESSION -> EXPRESSION . EXPONENT EXPRESSION
+    (8) EXPRESSION -> EXPRESSION . MOD EXPRESSION
+    (9) EXPRESSION -> EXPRESSION . DIVIDE EXPRESSION
+    (10) EXPRESSION -> EXPRESSION . TIMES EXPRESSION
+    (11) EXPRESSION -> EXPRESSION . MINUS EXPRESSION
+    (12) EXPRESSION -> EXPRESSION . PLUS EXPRESSION
+    $end            reduce using rule 1 (STATEMENT -> EXPRESSION .)
+    IS_NOT_EQUAL    shift and go to state 8
+    IS_EQUAL        shift and go to state 9
+    EXPONENT        shift and go to state 10
+    MOD             shift and go to state 11
+    DIVIDE          shift and go to state 12
+    TIMES           shift and go to state 13
+    MINUS           shift and go to state 14
+    PLUS            shift and go to state 15
 
 
 state 3
 
-    (2) STATEMENT -> EXPRESSION .
-    (6) EXPRESSION -> EXPRESSION . IS_NOT_EQUAL EXPRESSION
-    (7) EXPRESSION -> EXPRESSION . IS_EQUAL EXPRESSION
-    (8) EXPRESSION -> EXPRESSION . EXPONENT EXPRESSION
-    (9) EXPRESSION -> EXPRESSION . MOD EXPRESSION
-    (10) EXPRESSION -> EXPRESSION . DIVIDE EXPRESSION
-    (11) EXPRESSION -> EXPRESSION . TIMES EXPRESSION
-    (12) EXPRESSION -> EXPRESSION . MINUS EXPRESSION
-    (13) EXPRESSION -> EXPRESSION . PLUS EXPRESSION
-    $end            reduce using rule 2 (STATEMENT -> EXPRESSION .)
-    RCURLY          reduce using rule 2 (STATEMENT -> EXPRESSION .)
-    IS_NOT_EQUAL    shift and go to state 10
-    IS_EQUAL        shift and go to state 11
-    EXPONENT        shift and go to state 12
-    MOD             shift and go to state 13
-    DIVIDE          shift and go to state 14
-    TIMES           shift and go to state 15
-    MINUS           shift and go to state 16
-    PLUS            shift and go to state 17
+    (2) STATEMENT -> ASSIGNMENT .
+    $end            reduce using rule 2 (STATEMENT -> ASSIGNMENT .)
 
 
 state 4
 
-    (3) STATEMENT -> ASSIGNMENT .
-    $end            reduce using rule 3 (STATEMENT -> ASSIGNMENT .)
-    RCURLY          reduce using rule 3 (STATEMENT -> ASSIGNMENT .)
+    (13) EXPRESSION -> MINUS . EXPRESSION
+    (5) EXPRESSION -> . EXPRESSION IS_NOT_EQUAL EXPRESSION
+    (6) EXPRESSION -> . EXPRESSION IS_EQUAL EXPRESSION
+    (7) EXPRESSION -> . EXPRESSION EXPONENT EXPRESSION
+    (8) EXPRESSION -> . EXPRESSION MOD EXPRESSION
+    (9) EXPRESSION -> . EXPRESSION DIVIDE EXPRESSION
+    (10) EXPRESSION -> . EXPRESSION TIMES EXPRESSION
+    (11) EXPRESSION -> . EXPRESSION MINUS EXPRESSION
+    (12) EXPRESSION -> . EXPRESSION PLUS EXPRESSION
+    (13) EXPRESSION -> . MINUS EXPRESSION
+    (14) EXPRESSION -> . LPAREN EXPRESSION RPAREN
+    (15) EXPRESSION -> . ID
+    (16) EXPRESSION -> . NUMBER
+    MINUS           shift and go to state 4
+    LPAREN          shift and go to state 5
+    ID              shift and go to state 17
+    NUMBER          shift and go to state 7
 
+    EXPRESSION                     shift and go to state 16
 
 state 5
 
-    (5) CONDITIONAL -> IF . LPAREN EXPRESSION RPAREN LCURLY STATEMENT RCURLY
-    LPAREN          shift and go to state 18
+    (14) EXPRESSION -> LPAREN . EXPRESSION RPAREN
+    (5) EXPRESSION -> . EXPRESSION IS_NOT_EQUAL EXPRESSION
+    (6) EXPRESSION -> . EXPRESSION IS_EQUAL EXPRESSION
+    (7) EXPRESSION -> . EXPRESSION EXPONENT EXPRESSION
+    (8) EXPRESSION -> . EXPRESSION MOD EXPRESSION
+    (9) EXPRESSION -> . EXPRESSION DIVIDE EXPRESSION
+    (10) EXPRESSION -> . EXPRESSION TIMES EXPRESSION
+    (11) EXPRESSION -> . EXPRESSION MINUS EXPRESSION
+    (12) EXPRESSION -> . EXPRESSION PLUS EXPRESSION
+    (13) EXPRESSION -> . MINUS EXPRESSION
+    (14) EXPRESSION -> . LPAREN EXPRESSION RPAREN
+    (15) EXPRESSION -> . ID
+    (16) EXPRESSION -> . NUMBER
+    MINUS           shift and go to state 4
+    LPAREN          shift and go to state 5
+    ID              shift and go to state 17
+    NUMBER          shift and go to state 7
 
+    EXPRESSION                     shift and go to state 18
 
 state 6
 
-    (15) EXPRESSION -> LPAREN . EXPRESSION RPAREN
-    (6) EXPRESSION -> . EXPRESSION IS_NOT_EQUAL EXPRESSION
-    (7) EXPRESSION -> . EXPRESSION IS_EQUAL EXPRESSION
-    (8) EXPRESSION -> . EXPRESSION EXPONENT EXPRESSION
-    (9) EXPRESSION -> . EXPRESSION MOD EXPRESSION
-    (10) EXPRESSION -> . EXPRESSION DIVIDE EXPRESSION
-    (11) EXPRESSION -> . EXPRESSION TIMES EXPRESSION
-    (12) EXPRESSION -> . EXPRESSION MINUS EXPRESSION
-    (13) EXPRESSION -> . EXPRESSION PLUS EXPRESSION
-    (14) EXPRESSION -> . MINUS EXPRESSION
-    (15) EXPRESSION -> . LPAREN EXPRESSION RPAREN
-    (16) EXPRESSION -> . ID
-    (17) EXPRESSION -> . NUMBER
-    MINUS           shift and go to state 7
-    LPAREN          shift and go to state 6
-    ID              shift and go to state 20
-    NUMBER          shift and go to state 9
+    (15) EXPRESSION -> ID .
+    (3) ASSIGNMENT -> ID . ASSIGN EXPRESSION COMMA ASSIGNMENT
+    (4) ASSIGNMENT -> ID . ASSIGN EXPRESSION
+    IS_NOT_EQUAL    reduce using rule 15 (EXPRESSION -> ID .)
+    IS_EQUAL        reduce using rule 15 (EXPRESSION -> ID .)
+    EXPONENT        reduce using rule 15 (EXPRESSION -> ID .)
+    MOD             reduce using rule 15 (EXPRESSION -> ID .)
+    DIVIDE          reduce using rule 15 (EXPRESSION -> ID .)
+    TIMES           reduce using rule 15 (EXPRESSION -> ID .)
+    MINUS           reduce using rule 15 (EXPRESSION -> ID .)
+    PLUS            reduce using rule 15 (EXPRESSION -> ID .)
+    $end            reduce using rule 15 (EXPRESSION -> ID .)
+    ASSIGN          shift and go to state 19
 
-    EXPRESSION                     shift and go to state 19
 
 state 7
 
-    (14) EXPRESSION -> MINUS . EXPRESSION
-    (6) EXPRESSION -> . EXPRESSION IS_NOT_EQUAL EXPRESSION
-    (7) EXPRESSION -> . EXPRESSION IS_EQUAL EXPRESSION
-    (8) EXPRESSION -> . EXPRESSION EXPONENT EXPRESSION
-    (9) EXPRESSION -> . EXPRESSION MOD EXPRESSION
-    (10) EXPRESSION -> . EXPRESSION DIVIDE EXPRESSION
-    (11) EXPRESSION -> . EXPRESSION TIMES EXPRESSION
-    (12) EXPRESSION -> . EXPRESSION MINUS EXPRESSION
-    (13) EXPRESSION -> . EXPRESSION PLUS EXPRESSION
-    (14) EXPRESSION -> . MINUS EXPRESSION
-    (15) EXPRESSION -> . LPAREN EXPRESSION RPAREN
-    (16) EXPRESSION -> . ID
-    (17) EXPRESSION -> . NUMBER
-    MINUS           shift and go to state 7
-    LPAREN          shift and go to state 6
-    ID              shift and go to state 20
-    NUMBER          shift and go to state 9
+    (16) EXPRESSION -> NUMBER .
+    IS_NOT_EQUAL    reduce using rule 16 (EXPRESSION -> NUMBER .)
+    IS_EQUAL        reduce using rule 16 (EXPRESSION -> NUMBER .)
+    EXPONENT        reduce using rule 16 (EXPRESSION -> NUMBER .)
+    MOD             reduce using rule 16 (EXPRESSION -> NUMBER .)
+    DIVIDE          reduce using rule 16 (EXPRESSION -> NUMBER .)
+    TIMES           reduce using rule 16 (EXPRESSION -> NUMBER .)
+    MINUS           reduce using rule 16 (EXPRESSION -> NUMBER .)
+    PLUS            reduce using rule 16 (EXPRESSION -> NUMBER .)
+    $end            reduce using rule 16 (EXPRESSION -> NUMBER .)
+    RPAREN          reduce using rule 16 (EXPRESSION -> NUMBER .)
+    COMMA           reduce using rule 16 (EXPRESSION -> NUMBER .)
 
-    EXPRESSION                     shift and go to state 21
 
 state 8
 
-    (16) EXPRESSION -> ID .
-    (4) ASSIGNMENT -> ID . ASSIGN EXPRESSION
-    IS_NOT_EQUAL    reduce using rule 16 (EXPRESSION -> ID .)
-    IS_EQUAL        reduce using rule 16 (EXPRESSION -> ID .)
-    EXPONENT        reduce using rule 16 (EXPRESSION -> ID .)
-    MOD             reduce using rule 16 (EXPRESSION -> ID .)
-    DIVIDE          reduce using rule 16 (EXPRESSION -> ID .)
-    TIMES           reduce using rule 16 (EXPRESSION -> ID .)
-    MINUS           reduce using rule 16 (EXPRESSION -> ID .)
-    PLUS            reduce using rule 16 (EXPRESSION -> ID .)
-    $end            reduce using rule 16 (EXPRESSION -> ID .)
-    RCURLY          reduce using rule 16 (EXPRESSION -> ID .)
-    ASSIGN          shift and go to state 22
+    (5) EXPRESSION -> EXPRESSION IS_NOT_EQUAL . EXPRESSION
+    (5) EXPRESSION -> . EXPRESSION IS_NOT_EQUAL EXPRESSION
+    (6) EXPRESSION -> . EXPRESSION IS_EQUAL EXPRESSION
+    (7) EXPRESSION -> . EXPRESSION EXPONENT EXPRESSION
+    (8) EXPRESSION -> . EXPRESSION MOD EXPRESSION
+    (9) EXPRESSION -> . EXPRESSION DIVIDE EXPRESSION
+    (10) EXPRESSION -> . EXPRESSION TIMES EXPRESSION
+    (11) EXPRESSION -> . EXPRESSION MINUS EXPRESSION
+    (12) EXPRESSION -> . EXPRESSION PLUS EXPRESSION
+    (13) EXPRESSION -> . MINUS EXPRESSION
+    (14) EXPRESSION -> . LPAREN EXPRESSION RPAREN
+    (15) EXPRESSION -> . ID
+    (16) EXPRESSION -> . NUMBER
+    MINUS           shift and go to state 4
+    LPAREN          shift and go to state 5
+    ID              shift and go to state 17
+    NUMBER          shift and go to state 7
 
+    EXPRESSION                     shift and go to state 20
 
 state 9
 
-    (17) EXPRESSION -> NUMBER .
-    IS_NOT_EQUAL    reduce using rule 17 (EXPRESSION -> NUMBER .)
-    IS_EQUAL        reduce using rule 17 (EXPRESSION -> NUMBER .)
-    EXPONENT        reduce using rule 17 (EXPRESSION -> NUMBER .)
-    MOD             reduce using rule 17 (EXPRESSION -> NUMBER .)
-    DIVIDE          reduce using rule 17 (EXPRESSION -> NUMBER .)
-    TIMES           reduce using rule 17 (EXPRESSION -> NUMBER .)
-    MINUS           reduce using rule 17 (EXPRESSION -> NUMBER .)
-    PLUS            reduce using rule 17 (EXPRESSION -> NUMBER .)
-    $end            reduce using rule 17 (EXPRESSION -> NUMBER .)
-    RPAREN          reduce using rule 17 (EXPRESSION -> NUMBER .)
-    RCURLY          reduce using rule 17 (EXPRESSION -> NUMBER .)
+    (6) EXPRESSION -> EXPRESSION IS_EQUAL . EXPRESSION
+    (5) EXPRESSION -> . EXPRESSION IS_NOT_EQUAL EXPRESSION
+    (6) EXPRESSION -> . EXPRESSION IS_EQUAL EXPRESSION
+    (7) EXPRESSION -> . EXPRESSION EXPONENT EXPRESSION
+    (8) EXPRESSION -> . EXPRESSION MOD EXPRESSION
+    (9) EXPRESSION -> . EXPRESSION DIVIDE EXPRESSION
+    (10) EXPRESSION -> . EXPRESSION TIMES EXPRESSION
+    (11) EXPRESSION -> . EXPRESSION MINUS EXPRESSION
+    (12) EXPRESSION -> . EXPRESSION PLUS EXPRESSION
+    (13) EXPRESSION -> . MINUS EXPRESSION
+    (14) EXPRESSION -> . LPAREN EXPRESSION RPAREN
+    (15) EXPRESSION -> . ID
+    (16) EXPRESSION -> . NUMBER
+    MINUS           shift and go to state 4
+    LPAREN          shift and go to state 5
+    ID              shift and go to state 17
+    NUMBER          shift and go to state 7
 
+    EXPRESSION                     shift and go to state 21
 
 state 10
 
-    (6) EXPRESSION -> EXPRESSION IS_NOT_EQUAL . EXPRESSION
-    (6) EXPRESSION -> . EXPRESSION IS_NOT_EQUAL EXPRESSION
-    (7) EXPRESSION -> . EXPRESSION IS_EQUAL EXPRESSION
-    (8) EXPRESSION -> . EXPRESSION EXPONENT EXPRESSION
-    (9) EXPRESSION -> . EXPRESSION MOD EXPRESSION
-    (10) EXPRESSION -> . EXPRESSION DIVIDE EXPRESSION
-    (11) EXPRESSION -> . EXPRESSION TIMES EXPRESSION
-    (12) EXPRESSION -> . EXPRESSION MINUS EXPRESSION
-    (13) EXPRESSION -> . EXPRESSION PLUS EXPRESSION
-    (14) EXPRESSION -> . MINUS EXPRESSION
-    (15) EXPRESSION -> . LPAREN EXPRESSION RPAREN
-    (16) EXPRESSION -> . ID
-    (17) EXPRESSION -> . NUMBER
-    MINUS           shift and go to state 7
-    LPAREN          shift and go to state 6
-    ID              shift and go to state 20
-    NUMBER          shift and go to state 9
+    (7) EXPRESSION -> EXPRESSION EXPONENT . EXPRESSION
+    (5) EXPRESSION -> . EXPRESSION IS_NOT_EQUAL EXPRESSION
+    (6) EXPRESSION -> . EXPRESSION IS_EQUAL EXPRESSION
+    (7) EXPRESSION -> . EXPRESSION EXPONENT EXPRESSION
+    (8) EXPRESSION -> . EXPRESSION MOD EXPRESSION
+    (9) EXPRESSION -> . EXPRESSION DIVIDE EXPRESSION
+    (10) EXPRESSION -> . EXPRESSION TIMES EXPRESSION
+    (11) EXPRESSION -> . EXPRESSION MINUS EXPRESSION
+    (12) EXPRESSION -> . EXPRESSION PLUS EXPRESSION
+    (13) EXPRESSION -> . MINUS EXPRESSION
+    (14) EXPRESSION -> . LPAREN EXPRESSION RPAREN
+    (15) EXPRESSION -> . ID
+    (16) EXPRESSION -> . NUMBER
+    MINUS           shift and go to state 4
+    LPAREN          shift and go to state 5
+    ID              shift and go to state 17
+    NUMBER          shift and go to state 7
 
-    EXPRESSION                     shift and go to state 23
+    EXPRESSION                     shift and go to state 22
 
 state 11
 
-    (7) EXPRESSION -> EXPRESSION IS_EQUAL . EXPRESSION
-    (6) EXPRESSION -> . EXPRESSION IS_NOT_EQUAL EXPRESSION
-    (7) EXPRESSION -> . EXPRESSION IS_EQUAL EXPRESSION
-    (8) EXPRESSION -> . EXPRESSION EXPONENT EXPRESSION
-    (9) EXPRESSION -> . EXPRESSION MOD EXPRESSION
-    (10) EXPRESSION -> . EXPRESSION DIVIDE EXPRESSION
-    (11) EXPRESSION -> . EXPRESSION TIMES EXPRESSION
-    (12) EXPRESSION -> . EXPRESSION MINUS EXPRESSION
-    (13) EXPRESSION -> . EXPRESSION PLUS EXPRESSION
-    (14) EXPRESSION -> . MINUS EXPRESSION
-    (15) EXPRESSION -> . LPAREN EXPRESSION RPAREN
-    (16) EXPRESSION -> . ID
-    (17) EXPRESSION -> . NUMBER
-    MINUS           shift and go to state 7
-    LPAREN          shift and go to state 6
-    ID              shift and go to state 20
-    NUMBER          shift and go to state 9
+    (8) EXPRESSION -> EXPRESSION MOD . EXPRESSION
+    (5) EXPRESSION -> . EXPRESSION IS_NOT_EQUAL EXPRESSION
+    (6) EXPRESSION -> . EXPRESSION IS_EQUAL EXPRESSION
+    (7) EXPRESSION -> . EXPRESSION EXPONENT EXPRESSION
+    (8) EXPRESSION -> . EXPRESSION MOD EXPRESSION
+    (9) EXPRESSION -> . EXPRESSION DIVIDE EXPRESSION
+    (10) EXPRESSION -> . EXPRESSION TIMES EXPRESSION
+    (11) EXPRESSION -> . EXPRESSION MINUS EXPRESSION
+    (12) EXPRESSION -> . EXPRESSION PLUS EXPRESSION
+    (13) EXPRESSION -> . MINUS EXPRESSION
+    (14) EXPRESSION -> . LPAREN EXPRESSION RPAREN
+    (15) EXPRESSION -> . ID
+    (16) EXPRESSION -> . NUMBER
+    MINUS           shift and go to state 4
+    LPAREN          shift and go to state 5
+    ID              shift and go to state 17
+    NUMBER          shift and go to state 7
 
-    EXPRESSION                     shift and go to state 24
+    EXPRESSION                     shift and go to state 23
 
 state 12
 
-    (8) EXPRESSION -> EXPRESSION EXPONENT . EXPRESSION
-    (6) EXPRESSION -> . EXPRESSION IS_NOT_EQUAL EXPRESSION
-    (7) EXPRESSION -> . EXPRESSION IS_EQUAL EXPRESSION
-    (8) EXPRESSION -> . EXPRESSION EXPONENT EXPRESSION
-    (9) EXPRESSION -> . EXPRESSION MOD EXPRESSION
-    (10) EXPRESSION -> . EXPRESSION DIVIDE EXPRESSION
-    (11) EXPRESSION -> . EXPRESSION TIMES EXPRESSION
-    (12) EXPRESSION -> . EXPRESSION MINUS EXPRESSION
-    (13) EXPRESSION -> . EXPRESSION PLUS EXPRESSION
-    (14) EXPRESSION -> . MINUS EXPRESSION
-    (15) EXPRESSION -> . LPAREN EXPRESSION RPAREN
-    (16) EXPRESSION -> . ID
-    (17) EXPRESSION -> . NUMBER
-    MINUS           shift and go to state 7
-    LPAREN          shift and go to state 6
-    ID              shift and go to state 20
-    NUMBER          shift and go to state 9
+    (9) EXPRESSION -> EXPRESSION DIVIDE . EXPRESSION
+    (5) EXPRESSION -> . EXPRESSION IS_NOT_EQUAL EXPRESSION
+    (6) EXPRESSION -> . EXPRESSION IS_EQUAL EXPRESSION
+    (7) EXPRESSION -> . EXPRESSION EXPONENT EXPRESSION
+    (8) EXPRESSION -> . EXPRESSION MOD EXPRESSION
+    (9) EXPRESSION -> . EXPRESSION DIVIDE EXPRESSION
+    (10) EXPRESSION -> . EXPRESSION TIMES EXPRESSION
+    (11) EXPRESSION -> . EXPRESSION MINUS EXPRESSION
+    (12) EXPRESSION -> . EXPRESSION PLUS EXPRESSION
+    (13) EXPRESSION -> . MINUS EXPRESSION
+    (14) EXPRESSION -> . LPAREN EXPRESSION RPAREN
+    (15) EXPRESSION -> . ID
+    (16) EXPRESSION -> . NUMBER
+    MINUS           shift and go to state 4
+    LPAREN          shift and go to state 5
+    ID              shift and go to state 17
+    NUMBER          shift and go to state 7
 
-    EXPRESSION                     shift and go to state 25
+    EXPRESSION                     shift and go to state 24
 
 state 13
 
-    (9) EXPRESSION -> EXPRESSION MOD . EXPRESSION
-    (6) EXPRESSION -> . EXPRESSION IS_NOT_EQUAL EXPRESSION
-    (7) EXPRESSION -> . EXPRESSION IS_EQUAL EXPRESSION
-    (8) EXPRESSION -> . EXPRESSION EXPONENT EXPRESSION
-    (9) EXPRESSION -> . EXPRESSION MOD EXPRESSION
-    (10) EXPRESSION -> . EXPRESSION DIVIDE EXPRESSION
-    (11) EXPRESSION -> . EXPRESSION TIMES EXPRESSION
-    (12) EXPRESSION -> . EXPRESSION MINUS EXPRESSION
-    (13) EXPRESSION -> . EXPRESSION PLUS EXPRESSION
-    (14) EXPRESSION -> . MINUS EXPRESSION
-    (15) EXPRESSION -> . LPAREN EXPRESSION RPAREN
-    (16) EXPRESSION -> . ID
-    (17) EXPRESSION -> . NUMBER
-    MINUS           shift and go to state 7
-    LPAREN          shift and go to state 6
-    ID              shift and go to state 20
-    NUMBER          shift and go to state 9
+    (10) EXPRESSION -> EXPRESSION TIMES . EXPRESSION
+    (5) EXPRESSION -> . EXPRESSION IS_NOT_EQUAL EXPRESSION
+    (6) EXPRESSION -> . EXPRESSION IS_EQUAL EXPRESSION
+    (7) EXPRESSION -> . EXPRESSION EXPONENT EXPRESSION
+    (8) EXPRESSION -> . EXPRESSION MOD EXPRESSION
+    (9) EXPRESSION -> . EXPRESSION DIVIDE EXPRESSION
+    (10) EXPRESSION -> . EXPRESSION TIMES EXPRESSION
+    (11) EXPRESSION -> . EXPRESSION MINUS EXPRESSION
+    (12) EXPRESSION -> . EXPRESSION PLUS EXPRESSION
+    (13) EXPRESSION -> . MINUS EXPRESSION
+    (14) EXPRESSION -> . LPAREN EXPRESSION RPAREN
+    (15) EXPRESSION -> . ID
+    (16) EXPRESSION -> . NUMBER
+    MINUS           shift and go to state 4
+    LPAREN          shift and go to state 5
+    ID              shift and go to state 17
+    NUMBER          shift and go to state 7
 
-    EXPRESSION                     shift and go to state 26
+    EXPRESSION                     shift and go to state 25
 
 state 14
 
-    (10) EXPRESSION -> EXPRESSION DIVIDE . EXPRESSION
-    (6) EXPRESSION -> . EXPRESSION IS_NOT_EQUAL EXPRESSION
-    (7) EXPRESSION -> . EXPRESSION IS_EQUAL EXPRESSION
-    (8) EXPRESSION -> . EXPRESSION EXPONENT EXPRESSION
-    (9) EXPRESSION -> . EXPRESSION MOD EXPRESSION
-    (10) EXPRESSION -> . EXPRESSION DIVIDE EXPRESSION
-    (11) EXPRESSION -> . EXPRESSION TIMES EXPRESSION
-    (12) EXPRESSION -> . EXPRESSION MINUS EXPRESSION
-    (13) EXPRESSION -> . EXPRESSION PLUS EXPRESSION
-    (14) EXPRESSION -> . MINUS EXPRESSION
-    (15) EXPRESSION -> . LPAREN EXPRESSION RPAREN
-    (16) EXPRESSION -> . ID
-    (17) EXPRESSION -> . NUMBER
-    MINUS           shift and go to state 7
-    LPAREN          shift and go to state 6
-    ID              shift and go to state 20
-    NUMBER          shift and go to state 9
+    (11) EXPRESSION -> EXPRESSION MINUS . EXPRESSION
+    (5) EXPRESSION -> . EXPRESSION IS_NOT_EQUAL EXPRESSION
+    (6) EXPRESSION -> . EXPRESSION IS_EQUAL EXPRESSION
+    (7) EXPRESSION -> . EXPRESSION EXPONENT EXPRESSION
+    (8) EXPRESSION -> . EXPRESSION MOD EXPRESSION
+    (9) EXPRESSION -> . EXPRESSION DIVIDE EXPRESSION
+    (10) EXPRESSION -> . EXPRESSION TIMES EXPRESSION
+    (11) EXPRESSION -> . EXPRESSION MINUS EXPRESSION
+    (12) EXPRESSION -> . EXPRESSION PLUS EXPRESSION
+    (13) EXPRESSION -> . MINUS EXPRESSION
+    (14) EXPRESSION -> . LPAREN EXPRESSION RPAREN
+    (15) EXPRESSION -> . ID
+    (16) EXPRESSION -> . NUMBER
+    MINUS           shift and go to state 4
+    LPAREN          shift and go to state 5
+    ID              shift and go to state 17
+    NUMBER          shift and go to state 7
 
-    EXPRESSION                     shift and go to state 27
+    EXPRESSION                     shift and go to state 26
 
 state 15
 
-    (11) EXPRESSION -> EXPRESSION TIMES . EXPRESSION
-    (6) EXPRESSION -> . EXPRESSION IS_NOT_EQUAL EXPRESSION
-    (7) EXPRESSION -> . EXPRESSION IS_EQUAL EXPRESSION
-    (8) EXPRESSION -> . EXPRESSION EXPONENT EXPRESSION
-    (9) EXPRESSION -> . EXPRESSION MOD EXPRESSION
-    (10) EXPRESSION -> . EXPRESSION DIVIDE EXPRESSION
-    (11) EXPRESSION -> . EXPRESSION TIMES EXPRESSION
-    (12) EXPRESSION -> . EXPRESSION MINUS EXPRESSION
-    (13) EXPRESSION -> . EXPRESSION PLUS EXPRESSION
-    (14) EXPRESSION -> . MINUS EXPRESSION
-    (15) EXPRESSION -> . LPAREN EXPRESSION RPAREN
-    (16) EXPRESSION -> . ID
-    (17) EXPRESSION -> . NUMBER
-    MINUS           shift and go to state 7
-    LPAREN          shift and go to state 6
-    ID              shift and go to state 20
-    NUMBER          shift and go to state 9
+    (12) EXPRESSION -> EXPRESSION PLUS . EXPRESSION
+    (5) EXPRESSION -> . EXPRESSION IS_NOT_EQUAL EXPRESSION
+    (6) EXPRESSION -> . EXPRESSION IS_EQUAL EXPRESSION
+    (7) EXPRESSION -> . EXPRESSION EXPONENT EXPRESSION
+    (8) EXPRESSION -> . EXPRESSION MOD EXPRESSION
+    (9) EXPRESSION -> . EXPRESSION DIVIDE EXPRESSION
+    (10) EXPRESSION -> . EXPRESSION TIMES EXPRESSION
+    (11) EXPRESSION -> . EXPRESSION MINUS EXPRESSION
+    (12) EXPRESSION -> . EXPRESSION PLUS EXPRESSION
+    (13) EXPRESSION -> . MINUS EXPRESSION
+    (14) EXPRESSION -> . LPAREN EXPRESSION RPAREN
+    (15) EXPRESSION -> . ID
+    (16) EXPRESSION -> . NUMBER
+    MINUS           shift and go to state 4
+    LPAREN          shift and go to state 5
+    ID              shift and go to state 17
+    NUMBER          shift and go to state 7
 
-    EXPRESSION                     shift and go to state 28
+    EXPRESSION                     shift and go to state 27
 
 state 16
 
-    (12) EXPRESSION -> EXPRESSION MINUS . EXPRESSION
-    (6) EXPRESSION -> . EXPRESSION IS_NOT_EQUAL EXPRESSION
-    (7) EXPRESSION -> . EXPRESSION IS_EQUAL EXPRESSION
-    (8) EXPRESSION -> . EXPRESSION EXPONENT EXPRESSION
-    (9) EXPRESSION -> . EXPRESSION MOD EXPRESSION
-    (10) EXPRESSION -> . EXPRESSION DIVIDE EXPRESSION
-    (11) EXPRESSION -> . EXPRESSION TIMES EXPRESSION
-    (12) EXPRESSION -> . EXPRESSION MINUS EXPRESSION
-    (13) EXPRESSION -> . EXPRESSION PLUS EXPRESSION
-    (14) EXPRESSION -> . MINUS EXPRESSION
-    (15) EXPRESSION -> . LPAREN EXPRESSION RPAREN
-    (16) EXPRESSION -> . ID
-    (17) EXPRESSION -> . NUMBER
-    MINUS           shift and go to state 7
-    LPAREN          shift and go to state 6
-    ID              shift and go to state 20
-    NUMBER          shift and go to state 9
+    (13) EXPRESSION -> MINUS EXPRESSION .
+    (5) EXPRESSION -> EXPRESSION . IS_NOT_EQUAL EXPRESSION
+    (6) EXPRESSION -> EXPRESSION . IS_EQUAL EXPRESSION
+    (7) EXPRESSION -> EXPRESSION . EXPONENT EXPRESSION
+    (8) EXPRESSION -> EXPRESSION . MOD EXPRESSION
+    (9) EXPRESSION -> EXPRESSION . DIVIDE EXPRESSION
+    (10) EXPRESSION -> EXPRESSION . TIMES EXPRESSION
+    (11) EXPRESSION -> EXPRESSION . MINUS EXPRESSION
+    (12) EXPRESSION -> EXPRESSION . PLUS EXPRESSION
+    IS_NOT_EQUAL    reduce using rule 13 (EXPRESSION -> MINUS EXPRESSION .)
+    IS_EQUAL        reduce using rule 13 (EXPRESSION -> MINUS EXPRESSION .)
+    MOD             reduce using rule 13 (EXPRESSION -> MINUS EXPRESSION .)
+    DIVIDE          reduce using rule 13 (EXPRESSION -> MINUS EXPRESSION .)
+    TIMES           reduce using rule 13 (EXPRESSION -> MINUS EXPRESSION .)
+    MINUS           reduce using rule 13 (EXPRESSION -> MINUS EXPRESSION .)
+    PLUS            reduce using rule 13 (EXPRESSION -> MINUS EXPRESSION .)
+    $end            reduce using rule 13 (EXPRESSION -> MINUS EXPRESSION .)
+    RPAREN          reduce using rule 13 (EXPRESSION -> MINUS EXPRESSION .)
+    COMMA           reduce using rule 13 (EXPRESSION -> MINUS EXPRESSION .)
+    EXPONENT        shift and go to state 10
 
-    EXPRESSION                     shift and go to state 29
 
 state 17
 
-    (13) EXPRESSION -> EXPRESSION PLUS . EXPRESSION
-    (6) EXPRESSION -> . EXPRESSION IS_NOT_EQUAL EXPRESSION
-    (7) EXPRESSION -> . EXPRESSION IS_EQUAL EXPRESSION
-    (8) EXPRESSION -> . EXPRESSION EXPONENT EXPRESSION
-    (9) EXPRESSION -> . EXPRESSION MOD EXPRESSION
-    (10) EXPRESSION -> . EXPRESSION DIVIDE EXPRESSION
-    (11) EXPRESSION -> . EXPRESSION TIMES EXPRESSION
-    (12) EXPRESSION -> . EXPRESSION MINUS EXPRESSION
-    (13) EXPRESSION -> . EXPRESSION PLUS EXPRESSION
-    (14) EXPRESSION -> . MINUS EXPRESSION
-    (15) EXPRESSION -> . LPAREN EXPRESSION RPAREN
-    (16) EXPRESSION -> . ID
-    (17) EXPRESSION -> . NUMBER
-    MINUS           shift and go to state 7
-    LPAREN          shift and go to state 6
-    ID              shift and go to state 20
-    NUMBER          shift and go to state 9
+    (15) EXPRESSION -> ID .
+    IS_NOT_EQUAL    reduce using rule 15 (EXPRESSION -> ID .)
+    IS_EQUAL        reduce using rule 15 (EXPRESSION -> ID .)
+    EXPONENT        reduce using rule 15 (EXPRESSION -> ID .)
+    MOD             reduce using rule 15 (EXPRESSION -> ID .)
+    DIVIDE          reduce using rule 15 (EXPRESSION -> ID .)
+    TIMES           reduce using rule 15 (EXPRESSION -> ID .)
+    MINUS           reduce using rule 15 (EXPRESSION -> ID .)
+    PLUS            reduce using rule 15 (EXPRESSION -> ID .)
+    $end            reduce using rule 15 (EXPRESSION -> ID .)
+    RPAREN          reduce using rule 15 (EXPRESSION -> ID .)
+    COMMA           reduce using rule 15 (EXPRESSION -> ID .)
 
-    EXPRESSION                     shift and go to state 30
 
 state 18
 
-    (5) CONDITIONAL -> IF LPAREN . EXPRESSION RPAREN LCURLY STATEMENT RCURLY
-    (6) EXPRESSION -> . EXPRESSION IS_NOT_EQUAL EXPRESSION
-    (7) EXPRESSION -> . EXPRESSION IS_EQUAL EXPRESSION
-    (8) EXPRESSION -> . EXPRESSION EXPONENT EXPRESSION
-    (9) EXPRESSION -> . EXPRESSION MOD EXPRESSION
-    (10) EXPRESSION -> . EXPRESSION DIVIDE EXPRESSION
-    (11) EXPRESSION -> . EXPRESSION TIMES EXPRESSION
-    (12) EXPRESSION -> . EXPRESSION MINUS EXPRESSION
-    (13) EXPRESSION -> . EXPRESSION PLUS EXPRESSION
-    (14) EXPRESSION -> . MINUS EXPRESSION
-    (15) EXPRESSION -> . LPAREN EXPRESSION RPAREN
-    (16) EXPRESSION -> . ID
-    (17) EXPRESSION -> . NUMBER
-    MINUS           shift and go to state 7
-    LPAREN          shift and go to state 6
-    ID              shift and go to state 20
-    NUMBER          shift and go to state 9
+    (14) EXPRESSION -> LPAREN EXPRESSION . RPAREN
+    (5) EXPRESSION -> EXPRESSION . IS_NOT_EQUAL EXPRESSION
+    (6) EXPRESSION -> EXPRESSION . IS_EQUAL EXPRESSION
+    (7) EXPRESSION -> EXPRESSION . EXPONENT EXPRESSION
+    (8) EXPRESSION -> EXPRESSION . MOD EXPRESSION
+    (9) EXPRESSION -> EXPRESSION . DIVIDE EXPRESSION
+    (10) EXPRESSION -> EXPRESSION . TIMES EXPRESSION
+    (11) EXPRESSION -> EXPRESSION . MINUS EXPRESSION
+    (12) EXPRESSION -> EXPRESSION . PLUS EXPRESSION
+    RPAREN          shift and go to state 28
+    IS_NOT_EQUAL    shift and go to state 8
+    IS_EQUAL        shift and go to state 9
+    EXPONENT        shift and go to state 10
+    MOD             shift and go to state 11
+    DIVIDE          shift and go to state 12
+    TIMES           shift and go to state 13
+    MINUS           shift and go to state 14
+    PLUS            shift and go to state 15
 
-    EXPRESSION                     shift and go to state 31
 
 state 19
 
-    (15) EXPRESSION -> LPAREN EXPRESSION . RPAREN
-    (6) EXPRESSION -> EXPRESSION . IS_NOT_EQUAL EXPRESSION
-    (7) EXPRESSION -> EXPRESSION . IS_EQUAL EXPRESSION
-    (8) EXPRESSION -> EXPRESSION . EXPONENT EXPRESSION
-    (9) EXPRESSION -> EXPRESSION . MOD EXPRESSION
-    (10) EXPRESSION -> EXPRESSION . DIVIDE EXPRESSION
-    (11) EXPRESSION -> EXPRESSION . TIMES EXPRESSION
-    (12) EXPRESSION -> EXPRESSION . MINUS EXPRESSION
-    (13) EXPRESSION -> EXPRESSION . PLUS EXPRESSION
-    RPAREN          shift and go to state 32
-    IS_NOT_EQUAL    shift and go to state 10
-    IS_EQUAL        shift and go to state 11
-    EXPONENT        shift and go to state 12
-    MOD             shift and go to state 13
-    DIVIDE          shift and go to state 14
-    TIMES           shift and go to state 15
-    MINUS           shift and go to state 16
-    PLUS            shift and go to state 17
+    (3) ASSIGNMENT -> ID ASSIGN . EXPRESSION COMMA ASSIGNMENT
+    (4) ASSIGNMENT -> ID ASSIGN . EXPRESSION
+    (5) EXPRESSION -> . EXPRESSION IS_NOT_EQUAL EXPRESSION
+    (6) EXPRESSION -> . EXPRESSION IS_EQUAL EXPRESSION
+    (7) EXPRESSION -> . EXPRESSION EXPONENT EXPRESSION
+    (8) EXPRESSION -> . EXPRESSION MOD EXPRESSION
+    (9) EXPRESSION -> . EXPRESSION DIVIDE EXPRESSION
+    (10) EXPRESSION -> . EXPRESSION TIMES EXPRESSION
+    (11) EXPRESSION -> . EXPRESSION MINUS EXPRESSION
+    (12) EXPRESSION -> . EXPRESSION PLUS EXPRESSION
+    (13) EXPRESSION -> . MINUS EXPRESSION
+    (14) EXPRESSION -> . LPAREN EXPRESSION RPAREN
+    (15) EXPRESSION -> . ID
+    (16) EXPRESSION -> . NUMBER
+    MINUS           shift and go to state 4
+    LPAREN          shift and go to state 5
+    ID              shift and go to state 17
+    NUMBER          shift and go to state 7
 
+    EXPRESSION                     shift and go to state 29
 
 state 20
 
-    (16) EXPRESSION -> ID .
-    RPAREN          reduce using rule 16 (EXPRESSION -> ID .)
-    IS_NOT_EQUAL    reduce using rule 16 (EXPRESSION -> ID .)
-    IS_EQUAL        reduce using rule 16 (EXPRESSION -> ID .)
-    EXPONENT        reduce using rule 16 (EXPRESSION -> ID .)
-    MOD             reduce using rule 16 (EXPRESSION -> ID .)
-    DIVIDE          reduce using rule 16 (EXPRESSION -> ID .)
-    TIMES           reduce using rule 16 (EXPRESSION -> ID .)
-    MINUS           reduce using rule 16 (EXPRESSION -> ID .)
-    PLUS            reduce using rule 16 (EXPRESSION -> ID .)
-    $end            reduce using rule 16 (EXPRESSION -> ID .)
-    RCURLY          reduce using rule 16 (EXPRESSION -> ID .)
+    (5) EXPRESSION -> EXPRESSION IS_NOT_EQUAL EXPRESSION .
+    (5) EXPRESSION -> EXPRESSION . IS_NOT_EQUAL EXPRESSION
+    (6) EXPRESSION -> EXPRESSION . IS_EQUAL EXPRESSION
+    (7) EXPRESSION -> EXPRESSION . EXPONENT EXPRESSION
+    (8) EXPRESSION -> EXPRESSION . MOD EXPRESSION
+    (9) EXPRESSION -> EXPRESSION . DIVIDE EXPRESSION
+    (10) EXPRESSION -> EXPRESSION . TIMES EXPRESSION
+    (11) EXPRESSION -> EXPRESSION . MINUS EXPRESSION
+    (12) EXPRESSION -> EXPRESSION . PLUS EXPRESSION
+    IS_NOT_EQUAL    reduce using rule 5 (EXPRESSION -> EXPRESSION IS_NOT_EQUAL EXPRESSION .)
+    IS_EQUAL        reduce using rule 5 (EXPRESSION -> EXPRESSION IS_NOT_EQUAL EXPRESSION .)
+    $end            reduce using rule 5 (EXPRESSION -> EXPRESSION IS_NOT_EQUAL EXPRESSION .)
+    RPAREN          reduce using rule 5 (EXPRESSION -> EXPRESSION IS_NOT_EQUAL EXPRESSION .)
+    COMMA           reduce using rule 5 (EXPRESSION -> EXPRESSION IS_NOT_EQUAL EXPRESSION .)
+    EXPONENT        shift and go to state 10
+    MOD             shift and go to state 11
+    DIVIDE          shift and go to state 12
+    TIMES           shift and go to state 13
+    MINUS           shift and go to state 14
+    PLUS            shift and go to state 15
 
 
 state 21
 
-    (14) EXPRESSION -> MINUS EXPRESSION .
-    (6) EXPRESSION -> EXPRESSION . IS_NOT_EQUAL EXPRESSION
-    (7) EXPRESSION -> EXPRESSION . IS_EQUAL EXPRESSION
-    (8) EXPRESSION -> EXPRESSION . EXPONENT EXPRESSION
-    (9) EXPRESSION -> EXPRESSION . MOD EXPRESSION
-    (10) EXPRESSION -> EXPRESSION . DIVIDE EXPRESSION
-    (11) EXPRESSION -> EXPRESSION . TIMES EXPRESSION
-    (12) EXPRESSION -> EXPRESSION . MINUS EXPRESSION
-    (13) EXPRESSION -> EXPRESSION . PLUS EXPRESSION
-    IS_NOT_EQUAL    reduce using rule 14 (EXPRESSION -> MINUS EXPRESSION .)
-    IS_EQUAL        reduce using rule 14 (EXPRESSION -> MINUS EXPRESSION .)
-    MOD             reduce using rule 14 (EXPRESSION -> MINUS EXPRESSION .)
-    DIVIDE          reduce using rule 14 (EXPRESSION -> MINUS EXPRESSION .)
-    TIMES           reduce using rule 14 (EXPRESSION -> MINUS EXPRESSION .)
-    MINUS           reduce using rule 14 (EXPRESSION -> MINUS EXPRESSION .)
-    PLUS            reduce using rule 14 (EXPRESSION -> MINUS EXPRESSION .)
-    $end            reduce using rule 14 (EXPRESSION -> MINUS EXPRESSION .)
-    RPAREN          reduce using rule 14 (EXPRESSION -> MINUS EXPRESSION .)
-    RCURLY          reduce using rule 14 (EXPRESSION -> MINUS EXPRESSION .)
-    EXPONENT        shift and go to state 12
+    (6) EXPRESSION -> EXPRESSION IS_EQUAL EXPRESSION .
+    (5) EXPRESSION -> EXPRESSION . IS_NOT_EQUAL EXPRESSION
+    (6) EXPRESSION -> EXPRESSION . IS_EQUAL EXPRESSION
+    (7) EXPRESSION -> EXPRESSION . EXPONENT EXPRESSION
+    (8) EXPRESSION -> EXPRESSION . MOD EXPRESSION
+    (9) EXPRESSION -> EXPRESSION . DIVIDE EXPRESSION
+    (10) EXPRESSION -> EXPRESSION . TIMES EXPRESSION
+    (11) EXPRESSION -> EXPRESSION . MINUS EXPRESSION
+    (12) EXPRESSION -> EXPRESSION . PLUS EXPRESSION
+    IS_NOT_EQUAL    reduce using rule 6 (EXPRESSION -> EXPRESSION IS_EQUAL EXPRESSION .)
+    IS_EQUAL        reduce using rule 6 (EXPRESSION -> EXPRESSION IS_EQUAL EXPRESSION .)
+    $end            reduce using rule 6 (EXPRESSION -> EXPRESSION IS_EQUAL EXPRESSION .)
+    RPAREN          reduce using rule 6 (EXPRESSION -> EXPRESSION IS_EQUAL EXPRESSION .)
+    COMMA           reduce using rule 6 (EXPRESSION -> EXPRESSION IS_EQUAL EXPRESSION .)
+    EXPONENT        shift and go to state 10
+    MOD             shift and go to state 11
+    DIVIDE          shift and go to state 12
+    TIMES           shift and go to state 13
+    MINUS           shift and go to state 14
+    PLUS            shift and go to state 15
 
 
 state 22
 
-    (4) ASSIGNMENT -> ID ASSIGN . EXPRESSION
-    (6) EXPRESSION -> . EXPRESSION IS_NOT_EQUAL EXPRESSION
-    (7) EXPRESSION -> . EXPRESSION IS_EQUAL EXPRESSION
-    (8) EXPRESSION -> . EXPRESSION EXPONENT EXPRESSION
-    (9) EXPRESSION -> . EXPRESSION MOD EXPRESSION
-    (10) EXPRESSION -> . EXPRESSION DIVIDE EXPRESSION
-    (11) EXPRESSION -> . EXPRESSION TIMES EXPRESSION
-    (12) EXPRESSION -> . EXPRESSION MINUS EXPRESSION
-    (13) EXPRESSION -> . EXPRESSION PLUS EXPRESSION
-    (14) EXPRESSION -> . MINUS EXPRESSION
-    (15) EXPRESSION -> . LPAREN EXPRESSION RPAREN
-    (16) EXPRESSION -> . ID
-    (17) EXPRESSION -> . NUMBER
-    MINUS           shift and go to state 7
-    LPAREN          shift and go to state 6
-    ID              shift and go to state 20
-    NUMBER          shift and go to state 9
+    (7) EXPRESSION -> EXPRESSION EXPONENT EXPRESSION .
+    (5) EXPRESSION -> EXPRESSION . IS_NOT_EQUAL EXPRESSION
+    (6) EXPRESSION -> EXPRESSION . IS_EQUAL EXPRESSION
+    (7) EXPRESSION -> EXPRESSION . EXPONENT EXPRESSION
+    (8) EXPRESSION -> EXPRESSION . MOD EXPRESSION
+    (9) EXPRESSION -> EXPRESSION . DIVIDE EXPRESSION
+    (10) EXPRESSION -> EXPRESSION . TIMES EXPRESSION
+    (11) EXPRESSION -> EXPRESSION . MINUS EXPRESSION
+    (12) EXPRESSION -> EXPRESSION . PLUS EXPRESSION
+    IS_NOT_EQUAL    reduce using rule 7 (EXPRESSION -> EXPRESSION EXPONENT EXPRESSION .)
+    IS_EQUAL        reduce using rule 7 (EXPRESSION -> EXPRESSION EXPONENT EXPRESSION .)
+    MOD             reduce using rule 7 (EXPRESSION -> EXPRESSION EXPONENT EXPRESSION .)
+    DIVIDE          reduce using rule 7 (EXPRESSION -> EXPRESSION EXPONENT EXPRESSION .)
+    TIMES           reduce using rule 7 (EXPRESSION -> EXPRESSION EXPONENT EXPRESSION .)
+    MINUS           reduce using rule 7 (EXPRESSION -> EXPRESSION EXPONENT EXPRESSION .)
+    PLUS            reduce using rule 7 (EXPRESSION -> EXPRESSION EXPONENT EXPRESSION .)
+    $end            reduce using rule 7 (EXPRESSION -> EXPRESSION EXPONENT EXPRESSION .)
+    RPAREN          reduce using rule 7 (EXPRESSION -> EXPRESSION EXPONENT EXPRESSION .)
+    COMMA           reduce using rule 7 (EXPRESSION -> EXPRESSION EXPONENT EXPRESSION .)
+    EXPONENT        shift and go to state 10
 
-    EXPRESSION                     shift and go to state 33
 
 state 23
 
-    (6) EXPRESSION -> EXPRESSION IS_NOT_EQUAL EXPRESSION .
-    (6) EXPRESSION -> EXPRESSION . IS_NOT_EQUAL EXPRESSION
-    (7) EXPRESSION -> EXPRESSION . IS_EQUAL EXPRESSION
-    (8) EXPRESSION -> EXPRESSION . EXPONENT EXPRESSION
-    (9) EXPRESSION -> EXPRESSION . MOD EXPRESSION
-    (10) EXPRESSION -> EXPRESSION . DIVIDE EXPRESSION
-    (11) EXPRESSION -> EXPRESSION . TIMES EXPRESSION
-    (12) EXPRESSION -> EXPRESSION . MINUS EXPRESSION
-    (13) EXPRESSION -> EXPRESSION . PLUS EXPRESSION
-    IS_NOT_EQUAL    reduce using rule 6 (EXPRESSION -> EXPRESSION IS_NOT_EQUAL EXPRESSION .)
-    IS_EQUAL        reduce using rule 6 (EXPRESSION -> EXPRESSION IS_NOT_EQUAL EXPRESSION .)
-    $end            reduce using rule 6 (EXPRESSION -> EXPRESSION IS_NOT_EQUAL EXPRESSION .)
-    RPAREN          reduce using rule 6 (EXPRESSION -> EXPRESSION IS_NOT_EQUAL EXPRESSION .)
-    RCURLY          reduce using rule 6 (EXPRESSION -> EXPRESSION IS_NOT_EQUAL EXPRESSION .)
-    EXPONENT        shift and go to state 12
-    MOD             shift and go to state 13
-    DIVIDE          shift and go to state 14
-    TIMES           shift and go to state 15
-    MINUS           shift and go to state 16
-    PLUS            shift and go to state 17
+    (8) EXPRESSION -> EXPRESSION MOD EXPRESSION .
+    (5) EXPRESSION -> EXPRESSION . IS_NOT_EQUAL EXPRESSION
+    (6) EXPRESSION -> EXPRESSION . IS_EQUAL EXPRESSION
+    (7) EXPRESSION -> EXPRESSION . EXPONENT EXPRESSION
+    (8) EXPRESSION -> EXPRESSION . MOD EXPRESSION
+    (9) EXPRESSION -> EXPRESSION . DIVIDE EXPRESSION
+    (10) EXPRESSION -> EXPRESSION . TIMES EXPRESSION
+    (11) EXPRESSION -> EXPRESSION . MINUS EXPRESSION
+    (12) EXPRESSION -> EXPRESSION . PLUS EXPRESSION
+    IS_NOT_EQUAL    reduce using rule 8 (EXPRESSION -> EXPRESSION MOD EXPRESSION .)
+    IS_EQUAL        reduce using rule 8 (EXPRESSION -> EXPRESSION MOD EXPRESSION .)
+    MOD             reduce using rule 8 (EXPRESSION -> EXPRESSION MOD EXPRESSION .)
+    DIVIDE          reduce using rule 8 (EXPRESSION -> EXPRESSION MOD EXPRESSION .)
+    TIMES           reduce using rule 8 (EXPRESSION -> EXPRESSION MOD EXPRESSION .)
+    MINUS           reduce using rule 8 (EXPRESSION -> EXPRESSION MOD EXPRESSION .)
+    PLUS            reduce using rule 8 (EXPRESSION -> EXPRESSION MOD EXPRESSION .)
+    $end            reduce using rule 8 (EXPRESSION -> EXPRESSION MOD EXPRESSION .)
+    RPAREN          reduce using rule 8 (EXPRESSION -> EXPRESSION MOD EXPRESSION .)
+    COMMA           reduce using rule 8 (EXPRESSION -> EXPRESSION MOD EXPRESSION .)
+    EXPONENT        shift and go to state 10
 
 
 state 24
 
-    (7) EXPRESSION -> EXPRESSION IS_EQUAL EXPRESSION .
-    (6) EXPRESSION -> EXPRESSION . IS_NOT_EQUAL EXPRESSION
-    (7) EXPRESSION -> EXPRESSION . IS_EQUAL EXPRESSION
-    (8) EXPRESSION -> EXPRESSION . EXPONENT EXPRESSION
-    (9) EXPRESSION -> EXPRESSION . MOD EXPRESSION
-    (10) EXPRESSION -> EXPRESSION . DIVIDE EXPRESSION
-    (11) EXPRESSION -> EXPRESSION . TIMES EXPRESSION
-    (12) EXPRESSION -> EXPRESSION . MINUS EXPRESSION
-    (13) EXPRESSION -> EXPRESSION . PLUS EXPRESSION
-    IS_NOT_EQUAL    reduce using rule 7 (EXPRESSION -> EXPRESSION IS_EQUAL EXPRESSION .)
-    IS_EQUAL        reduce using rule 7 (EXPRESSION -> EXPRESSION IS_EQUAL EXPRESSION .)
-    $end            reduce using rule 7 (EXPRESSION -> EXPRESSION IS_EQUAL EXPRESSION .)
-    RPAREN          reduce using rule 7 (EXPRESSION -> EXPRESSION IS_EQUAL EXPRESSION .)
-    RCURLY          reduce using rule 7 (EXPRESSION -> EXPRESSION IS_EQUAL EXPRESSION .)
-    EXPONENT        shift and go to state 12
-    MOD             shift and go to state 13
-    DIVIDE          shift and go to state 14
-    TIMES           shift and go to state 15
-    MINUS           shift and go to state 16
-    PLUS            shift and go to state 17
+    (9) EXPRESSION -> EXPRESSION DIVIDE EXPRESSION .
+    (5) EXPRESSION -> EXPRESSION . IS_NOT_EQUAL EXPRESSION
+    (6) EXPRESSION -> EXPRESSION . IS_EQUAL EXPRESSION
+    (7) EXPRESSION -> EXPRESSION . EXPONENT EXPRESSION
+    (8) EXPRESSION -> EXPRESSION . MOD EXPRESSION
+    (9) EXPRESSION -> EXPRESSION . DIVIDE EXPRESSION
+    (10) EXPRESSION -> EXPRESSION . TIMES EXPRESSION
+    (11) EXPRESSION -> EXPRESSION . MINUS EXPRESSION
+    (12) EXPRESSION -> EXPRESSION . PLUS EXPRESSION
+    IS_NOT_EQUAL    reduce using rule 9 (EXPRESSION -> EXPRESSION DIVIDE EXPRESSION .)
+    IS_EQUAL        reduce using rule 9 (EXPRESSION -> EXPRESSION DIVIDE EXPRESSION .)
+    MOD             reduce using rule 9 (EXPRESSION -> EXPRESSION DIVIDE EXPRESSION .)
+    DIVIDE          reduce using rule 9 (EXPRESSION -> EXPRESSION DIVIDE EXPRESSION .)
+    TIMES           reduce using rule 9 (EXPRESSION -> EXPRESSION DIVIDE EXPRESSION .)
+    MINUS           reduce using rule 9 (EXPRESSION -> EXPRESSION DIVIDE EXPRESSION .)
+    PLUS            reduce using rule 9 (EXPRESSION -> EXPRESSION DIVIDE EXPRESSION .)
+    $end            reduce using rule 9 (EXPRESSION -> EXPRESSION DIVIDE EXPRESSION .)
+    RPAREN          reduce using rule 9 (EXPRESSION -> EXPRESSION DIVIDE EXPRESSION .)
+    COMMA           reduce using rule 9 (EXPRESSION -> EXPRESSION DIVIDE EXPRESSION .)
+    EXPONENT        shift and go to state 10
 
 
 state 25
 
-    (8) EXPRESSION -> EXPRESSION EXPONENT EXPRESSION .
-    (6) EXPRESSION -> EXPRESSION . IS_NOT_EQUAL EXPRESSION
-    (7) EXPRESSION -> EXPRESSION . IS_EQUAL EXPRESSION
-    (8) EXPRESSION -> EXPRESSION . EXPONENT EXPRESSION
-    (9) EXPRESSION -> EXPRESSION . MOD EXPRESSION
-    (10) EXPRESSION -> EXPRESSION . DIVIDE EXPRESSION
-    (11) EXPRESSION -> EXPRESSION . TIMES EXPRESSION
-    (12) EXPRESSION -> EXPRESSION . MINUS EXPRESSION
-    (13) EXPRESSION -> EXPRESSION . PLUS EXPRESSION
-    IS_NOT_EQUAL    reduce using rule 8 (EXPRESSION -> EXPRESSION EXPONENT EXPRESSION .)
-    IS_EQUAL        reduce using rule 8 (EXPRESSION -> EXPRESSION EXPONENT EXPRESSION .)
-    MOD             reduce using rule 8 (EXPRESSION -> EXPRESSION EXPONENT EXPRESSION .)
-    DIVIDE          reduce using rule 8 (EXPRESSION -> EXPRESSION EXPONENT EXPRESSION .)
-    TIMES           reduce using rule 8 (EXPRESSION -> EXPRESSION EXPONENT EXPRESSION .)
-    MINUS           reduce using rule 8 (EXPRESSION -> EXPRESSION EXPONENT EXPRESSION .)
-    PLUS            reduce using rule 8 (EXPRESSION -> EXPRESSION EXPONENT EXPRESSION .)
-    $end            reduce using rule 8 (EXPRESSION -> EXPRESSION EXPONENT EXPRESSION .)
-    RPAREN          reduce using rule 8 (EXPRESSION -> EXPRESSION EXPONENT EXPRESSION .)
-    RCURLY          reduce using rule 8 (EXPRESSION -> EXPRESSION EXPONENT EXPRESSION .)
-    EXPONENT        shift and go to state 12
+    (10) EXPRESSION -> EXPRESSION TIMES EXPRESSION .
+    (5) EXPRESSION -> EXPRESSION . IS_NOT_EQUAL EXPRESSION
+    (6) EXPRESSION -> EXPRESSION . IS_EQUAL EXPRESSION
+    (7) EXPRESSION -> EXPRESSION . EXPONENT EXPRESSION
+    (8) EXPRESSION -> EXPRESSION . MOD EXPRESSION
+    (9) EXPRESSION -> EXPRESSION . DIVIDE EXPRESSION
+    (10) EXPRESSION -> EXPRESSION . TIMES EXPRESSION
+    (11) EXPRESSION -> EXPRESSION . MINUS EXPRESSION
+    (12) EXPRESSION -> EXPRESSION . PLUS EXPRESSION
+    IS_NOT_EQUAL    reduce using rule 10 (EXPRESSION -> EXPRESSION TIMES EXPRESSION .)
+    IS_EQUAL        reduce using rule 10 (EXPRESSION -> EXPRESSION TIMES EXPRESSION .)
+    MOD             reduce using rule 10 (EXPRESSION -> EXPRESSION TIMES EXPRESSION .)
+    DIVIDE          reduce using rule 10 (EXPRESSION -> EXPRESSION TIMES EXPRESSION .)
+    TIMES           reduce using rule 10 (EXPRESSION -> EXPRESSION TIMES EXPRESSION .)
+    MINUS           reduce using rule 10 (EXPRESSION -> EXPRESSION TIMES EXPRESSION .)
+    PLUS            reduce using rule 10 (EXPRESSION -> EXPRESSION TIMES EXPRESSION .)
+    $end            reduce using rule 10 (EXPRESSION -> EXPRESSION TIMES EXPRESSION .)
+    RPAREN          reduce using rule 10 (EXPRESSION -> EXPRESSION TIMES EXPRESSION .)
+    COMMA           reduce using rule 10 (EXPRESSION -> EXPRESSION TIMES EXPRESSION .)
+    EXPONENT        shift and go to state 10
 
 
 state 26
 
-    (9) EXPRESSION -> EXPRESSION MOD EXPRESSION .
-    (6) EXPRESSION -> EXPRESSION . IS_NOT_EQUAL EXPRESSION
-    (7) EXPRESSION -> EXPRESSION . IS_EQUAL EXPRESSION
-    (8) EXPRESSION -> EXPRESSION . EXPONENT EXPRESSION
-    (9) EXPRESSION -> EXPRESSION . MOD EXPRESSION
-    (10) EXPRESSION -> EXPRESSION . DIVIDE EXPRESSION
-    (11) EXPRESSION -> EXPRESSION . TIMES EXPRESSION
-    (12) EXPRESSION -> EXPRESSION . MINUS EXPRESSION
-    (13) EXPRESSION -> EXPRESSION . PLUS EXPRESSION
-    IS_NOT_EQUAL    reduce using rule 9 (EXPRESSION -> EXPRESSION MOD EXPRESSION .)
-    IS_EQUAL        reduce using rule 9 (EXPRESSION -> EXPRESSION MOD EXPRESSION .)
-    MOD             reduce using rule 9 (EXPRESSION -> EXPRESSION MOD EXPRESSION .)
-    DIVIDE          reduce using rule 9 (EXPRESSION -> EXPRESSION MOD EXPRESSION .)
-    TIMES           reduce using rule 9 (EXPRESSION -> EXPRESSION MOD EXPRESSION .)
-    MINUS           reduce using rule 9 (EXPRESSION -> EXPRESSION MOD EXPRESSION .)
-    PLUS            reduce using rule 9 (EXPRESSION -> EXPRESSION MOD EXPRESSION .)
-    $end            reduce using rule 9 (EXPRESSION -> EXPRESSION MOD EXPRESSION .)
-    RPAREN          reduce using rule 9 (EXPRESSION -> EXPRESSION MOD EXPRESSION .)
-    RCURLY          reduce using rule 9 (EXPRESSION -> EXPRESSION MOD EXPRESSION .)
-    EXPONENT        shift and go to state 12
+    (11) EXPRESSION -> EXPRESSION MINUS EXPRESSION .
+    (5) EXPRESSION -> EXPRESSION . IS_NOT_EQUAL EXPRESSION
+    (6) EXPRESSION -> EXPRESSION . IS_EQUAL EXPRESSION
+    (7) EXPRESSION -> EXPRESSION . EXPONENT EXPRESSION
+    (8) EXPRESSION -> EXPRESSION . MOD EXPRESSION
+    (9) EXPRESSION -> EXPRESSION . DIVIDE EXPRESSION
+    (10) EXPRESSION -> EXPRESSION . TIMES EXPRESSION
+    (11) EXPRESSION -> EXPRESSION . MINUS EXPRESSION
+    (12) EXPRESSION -> EXPRESSION . PLUS EXPRESSION
+    IS_NOT_EQUAL    reduce using rule 11 (EXPRESSION -> EXPRESSION MINUS EXPRESSION .)
+    IS_EQUAL        reduce using rule 11 (EXPRESSION -> EXPRESSION MINUS EXPRESSION .)
+    MINUS           reduce using rule 11 (EXPRESSION -> EXPRESSION MINUS EXPRESSION .)
+    PLUS            reduce using rule 11 (EXPRESSION -> EXPRESSION MINUS EXPRESSION .)
+    $end            reduce using rule 11 (EXPRESSION -> EXPRESSION MINUS EXPRESSION .)
+    RPAREN          reduce using rule 11 (EXPRESSION -> EXPRESSION MINUS EXPRESSION .)
+    COMMA           reduce using rule 11 (EXPRESSION -> EXPRESSION MINUS EXPRESSION .)
+    EXPONENT        shift and go to state 10
+    MOD             shift and go to state 11
+    DIVIDE          shift and go to state 12
+    TIMES           shift and go to state 13
 
 
 state 27
 
-    (10) EXPRESSION -> EXPRESSION DIVIDE EXPRESSION .
-    (6) EXPRESSION -> EXPRESSION . IS_NOT_EQUAL EXPRESSION
-    (7) EXPRESSION -> EXPRESSION . IS_EQUAL EXPRESSION
-    (8) EXPRESSION -> EXPRESSION . EXPONENT EXPRESSION
-    (9) EXPRESSION -> EXPRESSION . MOD EXPRESSION
-    (10) EXPRESSION -> EXPRESSION . DIVIDE EXPRESSION
-    (11) EXPRESSION -> EXPRESSION . TIMES EXPRESSION
-    (12) EXPRESSION -> EXPRESSION . MINUS EXPRESSION
-    (13) EXPRESSION -> EXPRESSION . PLUS EXPRESSION
-    IS_NOT_EQUAL    reduce using rule 10 (EXPRESSION -> EXPRESSION DIVIDE EXPRESSION .)
-    IS_EQUAL        reduce using rule 10 (EXPRESSION -> EXPRESSION DIVIDE EXPRESSION .)
-    MOD             reduce using rule 10 (EXPRESSION -> EXPRESSION DIVIDE EXPRESSION .)
-    DIVIDE          reduce using rule 10 (EXPRESSION -> EXPRESSION DIVIDE EXPRESSION .)
-    TIMES           reduce using rule 10 (EXPRESSION -> EXPRESSION DIVIDE EXPRESSION .)
-    MINUS           reduce using rule 10 (EXPRESSION -> EXPRESSION DIVIDE EXPRESSION .)
-    PLUS            reduce using rule 10 (EXPRESSION -> EXPRESSION DIVIDE EXPRESSION .)
-    $end            reduce using rule 10 (EXPRESSION -> EXPRESSION DIVIDE EXPRESSION .)
-    RPAREN          reduce using rule 10 (EXPRESSION -> EXPRESSION DIVIDE EXPRESSION .)
-    RCURLY          reduce using rule 10 (EXPRESSION -> EXPRESSION DIVIDE EXPRESSION .)
-    EXPONENT        shift and go to state 12
+    (12) EXPRESSION -> EXPRESSION PLUS EXPRESSION .
+    (5) EXPRESSION -> EXPRESSION . IS_NOT_EQUAL EXPRESSION
+    (6) EXPRESSION -> EXPRESSION . IS_EQUAL EXPRESSION
+    (7) EXPRESSION -> EXPRESSION . EXPONENT EXPRESSION
+    (8) EXPRESSION -> EXPRESSION . MOD EXPRESSION
+    (9) EXPRESSION -> EXPRESSION . DIVIDE EXPRESSION
+    (10) EXPRESSION -> EXPRESSION . TIMES EXPRESSION
+    (11) EXPRESSION -> EXPRESSION . MINUS EXPRESSION
+    (12) EXPRESSION -> EXPRESSION . PLUS EXPRESSION
+    IS_NOT_EQUAL    reduce using rule 12 (EXPRESSION -> EXPRESSION PLUS EXPRESSION .)
+    IS_EQUAL        reduce using rule 12 (EXPRESSION -> EXPRESSION PLUS EXPRESSION .)
+    MINUS           reduce using rule 12 (EXPRESSION -> EXPRESSION PLUS EXPRESSION .)
+    PLUS            reduce using rule 12 (EXPRESSION -> EXPRESSION PLUS EXPRESSION .)
+    $end            reduce using rule 12 (EXPRESSION -> EXPRESSION PLUS EXPRESSION .)
+    RPAREN          reduce using rule 12 (EXPRESSION -> EXPRESSION PLUS EXPRESSION .)
+    COMMA           reduce using rule 12 (EXPRESSION -> EXPRESSION PLUS EXPRESSION .)
+    EXPONENT        shift and go to state 10
+    MOD             shift and go to state 11
+    DIVIDE          shift and go to state 12
+    TIMES           shift and go to state 13
 
 
 state 28
 
-    (11) EXPRESSION -> EXPRESSION TIMES EXPRESSION .
-    (6) EXPRESSION -> EXPRESSION . IS_NOT_EQUAL EXPRESSION
-    (7) EXPRESSION -> EXPRESSION . IS_EQUAL EXPRESSION
-    (8) EXPRESSION -> EXPRESSION . EXPONENT EXPRESSION
-    (9) EXPRESSION -> EXPRESSION . MOD EXPRESSION
-    (10) EXPRESSION -> EXPRESSION . DIVIDE EXPRESSION
-    (11) EXPRESSION -> EXPRESSION . TIMES EXPRESSION
-    (12) EXPRESSION -> EXPRESSION . MINUS EXPRESSION
-    (13) EXPRESSION -> EXPRESSION . PLUS EXPRESSION
-    IS_NOT_EQUAL    reduce using rule 11 (EXPRESSION -> EXPRESSION TIMES EXPRESSION .)
-    IS_EQUAL        reduce using rule 11 (EXPRESSION -> EXPRESSION TIMES EXPRESSION .)
-    MOD             reduce using rule 11 (EXPRESSION -> EXPRESSION TIMES EXPRESSION .)
-    DIVIDE          reduce using rule 11 (EXPRESSION -> EXPRESSION TIMES EXPRESSION .)
-    TIMES           reduce using rule 11 (EXPRESSION -> EXPRESSION TIMES EXPRESSION .)
-    MINUS           reduce using rule 11 (EXPRESSION -> EXPRESSION TIMES EXPRESSION .)
-    PLUS            reduce using rule 11 (EXPRESSION -> EXPRESSION TIMES EXPRESSION .)
-    $end            reduce using rule 11 (EXPRESSION -> EXPRESSION TIMES EXPRESSION .)
-    RPAREN          reduce using rule 11 (EXPRESSION -> EXPRESSION TIMES EXPRESSION .)
-    RCURLY          reduce using rule 11 (EXPRESSION -> EXPRESSION TIMES EXPRESSION .)
-    EXPONENT        shift and go to state 12
+    (14) EXPRESSION -> LPAREN EXPRESSION RPAREN .
+    IS_NOT_EQUAL    reduce using rule 14 (EXPRESSION -> LPAREN EXPRESSION RPAREN .)
+    IS_EQUAL        reduce using rule 14 (EXPRESSION -> LPAREN EXPRESSION RPAREN .)
+    EXPONENT        reduce using rule 14 (EXPRESSION -> LPAREN EXPRESSION RPAREN .)
+    MOD             reduce using rule 14 (EXPRESSION -> LPAREN EXPRESSION RPAREN .)
+    DIVIDE          reduce using rule 14 (EXPRESSION -> LPAREN EXPRESSION RPAREN .)
+    TIMES           reduce using rule 14 (EXPRESSION -> LPAREN EXPRESSION RPAREN .)
+    MINUS           reduce using rule 14 (EXPRESSION -> LPAREN EXPRESSION RPAREN .)
+    PLUS            reduce using rule 14 (EXPRESSION -> LPAREN EXPRESSION RPAREN .)
+    $end            reduce using rule 14 (EXPRESSION -> LPAREN EXPRESSION RPAREN .)
+    RPAREN          reduce using rule 14 (EXPRESSION -> LPAREN EXPRESSION RPAREN .)
+    COMMA           reduce using rule 14 (EXPRESSION -> LPAREN EXPRESSION RPAREN .)
 
 
 state 29
 
-    (12) EXPRESSION -> EXPRESSION MINUS EXPRESSION .
-    (6) EXPRESSION -> EXPRESSION . IS_NOT_EQUAL EXPRESSION
-    (7) EXPRESSION -> EXPRESSION . IS_EQUAL EXPRESSION
-    (8) EXPRESSION -> EXPRESSION . EXPONENT EXPRESSION
-    (9) EXPRESSION -> EXPRESSION . MOD EXPRESSION
-    (10) EXPRESSION -> EXPRESSION . DIVIDE EXPRESSION
-    (11) EXPRESSION -> EXPRESSION . TIMES EXPRESSION
-    (12) EXPRESSION -> EXPRESSION . MINUS EXPRESSION
-    (13) EXPRESSION -> EXPRESSION . PLUS EXPRESSION
-    IS_NOT_EQUAL    reduce using rule 12 (EXPRESSION -> EXPRESSION MINUS EXPRESSION .)
-    IS_EQUAL        reduce using rule 12 (EXPRESSION -> EXPRESSION MINUS EXPRESSION .)
-    MINUS           reduce using rule 12 (EXPRESSION -> EXPRESSION MINUS EXPRESSION .)
-    PLUS            reduce using rule 12 (EXPRESSION -> EXPRESSION MINUS EXPRESSION .)
-    $end            reduce using rule 12 (EXPRESSION -> EXPRESSION MINUS EXPRESSION .)
-    RPAREN          reduce using rule 12 (EXPRESSION -> EXPRESSION MINUS EXPRESSION .)
-    RCURLY          reduce using rule 12 (EXPRESSION -> EXPRESSION MINUS EXPRESSION .)
-    EXPONENT        shift and go to state 12
-    MOD             shift and go to state 13
-    DIVIDE          shift and go to state 14
-    TIMES           shift and go to state 15
+    (3) ASSIGNMENT -> ID ASSIGN EXPRESSION . COMMA ASSIGNMENT
+    (4) ASSIGNMENT -> ID ASSIGN EXPRESSION .
+    (5) EXPRESSION -> EXPRESSION . IS_NOT_EQUAL EXPRESSION
+    (6) EXPRESSION -> EXPRESSION . IS_EQUAL EXPRESSION
+    (7) EXPRESSION -> EXPRESSION . EXPONENT EXPRESSION
+    (8) EXPRESSION -> EXPRESSION . MOD EXPRESSION
+    (9) EXPRESSION -> EXPRESSION . DIVIDE EXPRESSION
+    (10) EXPRESSION -> EXPRESSION . TIMES EXPRESSION
+    (11) EXPRESSION -> EXPRESSION . MINUS EXPRESSION
+    (12) EXPRESSION -> EXPRESSION . PLUS EXPRESSION
+    COMMA           shift and go to state 30
+    $end            reduce using rule 4 (ASSIGNMENT -> ID ASSIGN EXPRESSION .)
+    IS_NOT_EQUAL    shift and go to state 8
+    IS_EQUAL        shift and go to state 9
+    EXPONENT        shift and go to state 10
+    MOD             shift and go to state 11
+    DIVIDE          shift and go to state 12
+    TIMES           shift and go to state 13
+    MINUS           shift and go to state 14
+    PLUS            shift and go to state 15
 
 
 state 30
 
-    (13) EXPRESSION -> EXPRESSION PLUS EXPRESSION .
-    (6) EXPRESSION -> EXPRESSION . IS_NOT_EQUAL EXPRESSION
-    (7) EXPRESSION -> EXPRESSION . IS_EQUAL EXPRESSION
-    (8) EXPRESSION -> EXPRESSION . EXPONENT EXPRESSION
-    (9) EXPRESSION -> EXPRESSION . MOD EXPRESSION
-    (10) EXPRESSION -> EXPRESSION . DIVIDE EXPRESSION
-    (11) EXPRESSION -> EXPRESSION . TIMES EXPRESSION
-    (12) EXPRESSION -> EXPRESSION . MINUS EXPRESSION
-    (13) EXPRESSION -> EXPRESSION . PLUS EXPRESSION
-    IS_NOT_EQUAL    reduce using rule 13 (EXPRESSION -> EXPRESSION PLUS EXPRESSION .)
-    IS_EQUAL        reduce using rule 13 (EXPRESSION -> EXPRESSION PLUS EXPRESSION .)
-    MINUS           reduce using rule 13 (EXPRESSION -> EXPRESSION PLUS EXPRESSION .)
-    PLUS            reduce using rule 13 (EXPRESSION -> EXPRESSION PLUS EXPRESSION .)
-    $end            reduce using rule 13 (EXPRESSION -> EXPRESSION PLUS EXPRESSION .)
-    RPAREN          reduce using rule 13 (EXPRESSION -> EXPRESSION PLUS EXPRESSION .)
-    RCURLY          reduce using rule 13 (EXPRESSION -> EXPRESSION PLUS EXPRESSION .)
-    EXPONENT        shift and go to state 12
-    MOD             shift and go to state 13
-    DIVIDE          shift and go to state 14
-    TIMES           shift and go to state 15
+    (3) ASSIGNMENT -> ID ASSIGN EXPRESSION COMMA . ASSIGNMENT
+    (3) ASSIGNMENT -> . ID ASSIGN EXPRESSION COMMA ASSIGNMENT
+    (4) ASSIGNMENT -> . ID ASSIGN EXPRESSION
+    ID              shift and go to state 31
 
+    ASSIGNMENT                     shift and go to state 32
 
 state 31
 
-    (5) CONDITIONAL -> IF LPAREN EXPRESSION . RPAREN LCURLY STATEMENT RCURLY
-    (6) EXPRESSION -> EXPRESSION . IS_NOT_EQUAL EXPRESSION
-    (7) EXPRESSION -> EXPRESSION . IS_EQUAL EXPRESSION
-    (8) EXPRESSION -> EXPRESSION . EXPONENT EXPRESSION
-    (9) EXPRESSION -> EXPRESSION . MOD EXPRESSION
-    (10) EXPRESSION -> EXPRESSION . DIVIDE EXPRESSION
-    (11) EXPRESSION -> EXPRESSION . TIMES EXPRESSION
-    (12) EXPRESSION -> EXPRESSION . MINUS EXPRESSION
-    (13) EXPRESSION -> EXPRESSION . PLUS EXPRESSION
-    RPAREN          shift and go to state 34
-    IS_NOT_EQUAL    shift and go to state 10
-    IS_EQUAL        shift and go to state 11
-    EXPONENT        shift and go to state 12
-    MOD             shift and go to state 13
-    DIVIDE          shift and go to state 14
-    TIMES           shift and go to state 15
-    MINUS           shift and go to state 16
-    PLUS            shift and go to state 17
+    (3) ASSIGNMENT -> ID . ASSIGN EXPRESSION COMMA ASSIGNMENT
+    (4) ASSIGNMENT -> ID . ASSIGN EXPRESSION
+    ASSIGN          shift and go to state 19
 
 
 state 32
 
-    (15) EXPRESSION -> LPAREN EXPRESSION RPAREN .
-    IS_NOT_EQUAL    reduce using rule 15 (EXPRESSION -> LPAREN EXPRESSION RPAREN .)
-    IS_EQUAL        reduce using rule 15 (EXPRESSION -> LPAREN EXPRESSION RPAREN .)
-    EXPONENT        reduce using rule 15 (EXPRESSION -> LPAREN EXPRESSION RPAREN .)
-    MOD             reduce using rule 15 (EXPRESSION -> LPAREN EXPRESSION RPAREN .)
-    DIVIDE          reduce using rule 15 (EXPRESSION -> LPAREN EXPRESSION RPAREN .)
-    TIMES           reduce using rule 15 (EXPRESSION -> LPAREN EXPRESSION RPAREN .)
-    MINUS           reduce using rule 15 (EXPRESSION -> LPAREN EXPRESSION RPAREN .)
-    PLUS            reduce using rule 15 (EXPRESSION -> LPAREN EXPRESSION RPAREN .)
-    $end            reduce using rule 15 (EXPRESSION -> LPAREN EXPRESSION RPAREN .)
-    RPAREN          reduce using rule 15 (EXPRESSION -> LPAREN EXPRESSION RPAREN .)
-    RCURLY          reduce using rule 15 (EXPRESSION -> LPAREN EXPRESSION RPAREN .)
-
-
-state 33
-
-    (4) ASSIGNMENT -> ID ASSIGN EXPRESSION .
-    (6) EXPRESSION -> EXPRESSION . IS_NOT_EQUAL EXPRESSION
-    (7) EXPRESSION -> EXPRESSION . IS_EQUAL EXPRESSION
-    (8) EXPRESSION -> EXPRESSION . EXPONENT EXPRESSION
-    (9) EXPRESSION -> EXPRESSION . MOD EXPRESSION
-    (10) EXPRESSION -> EXPRESSION . DIVIDE EXPRESSION
-    (11) EXPRESSION -> EXPRESSION . TIMES EXPRESSION
-    (12) EXPRESSION -> EXPRESSION . MINUS EXPRESSION
-    (13) EXPRESSION -> EXPRESSION . PLUS EXPRESSION
-    $end            reduce using rule 4 (ASSIGNMENT -> ID ASSIGN EXPRESSION .)
-    RCURLY          reduce using rule 4 (ASSIGNMENT -> ID ASSIGN EXPRESSION .)
-    IS_NOT_EQUAL    shift and go to state 10
-    IS_EQUAL        shift and go to state 11
-    EXPONENT        shift and go to state 12
-    MOD             shift and go to state 13
-    DIVIDE          shift and go to state 14
-    TIMES           shift and go to state 15
-    MINUS           shift and go to state 16
-    PLUS            shift and go to state 17
-
-
-state 34
-
-    (5) CONDITIONAL -> IF LPAREN EXPRESSION RPAREN . LCURLY STATEMENT RCURLY
-    LCURLY          shift and go to state 35
-
-
-state 35
-
-    (5) CONDITIONAL -> IF LPAREN EXPRESSION RPAREN LCURLY . STATEMENT RCURLY
-    (1) STATEMENT -> . CONDITIONAL
-    (2) STATEMENT -> . EXPRESSION
-    (3) STATEMENT -> . ASSIGNMENT
-    (5) CONDITIONAL -> . IF LPAREN EXPRESSION RPAREN LCURLY STATEMENT RCURLY
-    (6) EXPRESSION -> . EXPRESSION IS_NOT_EQUAL EXPRESSION
-    (7) EXPRESSION -> . EXPRESSION IS_EQUAL EXPRESSION
-    (8) EXPRESSION -> . EXPRESSION EXPONENT EXPRESSION
-    (9) EXPRESSION -> . EXPRESSION MOD EXPRESSION
-    (10) EXPRESSION -> . EXPRESSION DIVIDE EXPRESSION
-    (11) EXPRESSION -> . EXPRESSION TIMES EXPRESSION
-    (12) EXPRESSION -> . EXPRESSION MINUS EXPRESSION
-    (13) EXPRESSION -> . EXPRESSION PLUS EXPRESSION
-    (14) EXPRESSION -> . MINUS EXPRESSION
-    (15) EXPRESSION -> . LPAREN EXPRESSION RPAREN
-    (16) EXPRESSION -> . ID
-    (17) EXPRESSION -> . NUMBER
-    (4) ASSIGNMENT -> . ID ASSIGN EXPRESSION
-    IF              shift and go to state 5
-    MINUS           shift and go to state 7
-    LPAREN          shift and go to state 6
-    ID              shift and go to state 8
-    NUMBER          shift and go to state 9
-
-    EXPRESSION                     shift and go to state 3
-    STATEMENT                      shift and go to state 36
-    CONDITIONAL                    shift and go to state 2
-    ASSIGNMENT                     shift and go to state 4
-
-state 36
-
-    (5) CONDITIONAL -> IF LPAREN EXPRESSION RPAREN LCURLY STATEMENT . RCURLY
-    RCURLY          shift and go to state 37
-
-
-state 37
-
-    (5) CONDITIONAL -> IF LPAREN EXPRESSION RPAREN LCURLY STATEMENT RCURLY .
-    $end            reduce using rule 5 (CONDITIONAL -> IF LPAREN EXPRESSION RPAREN LCURLY STATEMENT RCURLY .)
-    RCURLY          reduce using rule 5 (CONDITIONAL -> IF LPAREN EXPRESSION RPAREN LCURLY STATEMENT RCURLY .)
+    (3) ASSIGNMENT -> ID ASSIGN EXPRESSION COMMA ASSIGNMENT .
+    $end            reduce using rule 3 (ASSIGNMENT -> ID ASSIGN EXPRESSION COMMA ASSIGNMENT .)

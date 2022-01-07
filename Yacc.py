@@ -36,28 +36,34 @@ class CalcParser(Parser):
     def STATEMENT(self, production):
         return ('NODE_STATEMENT', production.EXPRESSION)
 
-    @_("CONDITIONAL")
-    def STATEMENT(self, production):
-        return ('NODE_STATEMENT', production.CONDITIONAL) 
+    #@_("CONDITIONAL")
+    #def STATEMENT(self, production):
+    #    return ('NODE_STATEMENT', production.CONDITIONAL) 
 
     ####################################################################################### 
      
-    #ASSIGNMENT : ID = EXPRESSION
+    #ASSIGNMENT : ID = EXPRESSION 
     @_("ID ASSIGN EXPRESSION")
     def ASSIGNMENT(self, production):
         return ('NODE_ASSIGNMENT', production.ID, production.EXPRESSION)
     
+    #ASSIGNMENT : ID = EXPRESSION, ASSIGNMENT <-------- new line
+    @_("ID ASSIGN EXPRESSION COMMA ASSIGNMENT")
+    def ASSIGNMENT(self, production):
+        return ('NODE_ASSIGNMENT_EXP', production.ID, production.EXPRESSION, production.ASSIGNMENT)
+    
+
     ##########################################################################################
 
     #CONDITIONAL : IF ( EXPRESSION ) { STATEMENT }
-    @_("IF LPAREN EXPRESSION RPAREN LCURLY STATEMENT RCURLY ")
-    def CONDITIONAL(self, production):   
-        return ('NODE_IF', production.EXPRESSION, production.STATEMENT)
+    #@_("IF LPAREN EXPRESSION RPAREN LCURLY STATEMENT RCURLY ")
+    #def CONDITIONAL(self, production):   
+     #   return ('NODE_IF', production.EXPRESSION, production.STATEMENT)
 
     #CONDITIONAL : IF ( EXPRESSION ) { STATEMENT } ELSE { STATEMENT } 
-    @_("IF LPAREN EXPRESSION RPAREN LCURLY STATEMENT RCURLY ")
-    def CONDITIONAL(self, production):   
-        return ('NODE_IF', production.EXPRESSION, production.STATEMENT0, production.STATEMENT1)
+    #@_("IF LPAREN EXPRESSION RPAREN LCURLY STATEMENT RCURLY ")
+    #def CONDITIONAL(self, production):   
+    #    return ('NODE_IF', production.EXPRESSION, production.STATEMENT0, production.STATEMENT1)
 
     ##########################################################################################  
       
@@ -143,13 +149,22 @@ class CalcParser(Parser):
             except LookupError:
                 print(f'Undefined name {ast[1]!r}')
 
+
+        elif(ast[0] == 'NODE_ASSIGNMENT_EXP'): # <----------- New Line
+            try:
+                self.names[ast[1]] = self.eval_ast(ast[2])     
+                return self.names[ast[1]] , self.eval_ast(ast[3])
+            except LookupError:
+                print(f'Undefined name {ast[1]!r}')
+        
+
         #############################################
 
-        elif(ast[0] == 'NODE_IF'):
-            return self.eval_ast(ast[2]) if self.eval_ast(ast[1]) == True else None
+        #elif(ast[0] == 'NODE_IF'):
+            #return self.eval_ast(ast[2]) if self.eval_ast(ast[1]) == True else None
 
-        elif(ast[0] == 'NODE_IF_ELSE'):  
-            return self.eval_ast(ast[2]) if self.eval_ast(ast[1]) == True else self.eval_ast(ast[1])
+        #elif(ast[0] == 'NODE_IF_ELSE'):  
+            #return self.eval_ast(ast[2]) if self.eval_ast(ast[1]) == True else self.eval_ast(ast[1])
 
         #############################################
 
@@ -159,8 +174,8 @@ class CalcParser(Parser):
         elif(ast[0] == 'NODE_NUMBER'):
             return ast[1]
    
-        elif(ast[0] == 'NODE_LP_EXPRESSION_RP'):
-           return self.eval_ast(ast[2])
+        #elif(ast[0] == 'NODE_LP_EXPRESSION_RP'):
+         #  return self.eval_ast(ast[2])
 
         elif(ast[0] == 'NODE_UMINUS'):
             return -self.eval_ast(ast[1])
