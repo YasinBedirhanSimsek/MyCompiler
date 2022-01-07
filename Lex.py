@@ -11,7 +11,7 @@ class CalcLexer(Lexer):
         #SYMBOLS
         LPAREN, RPAREN,
         
-        LCURLY, RCURLY,
+        LCURLY, RCURLY, COMMA, # <-------- New Token COMMA
         
         #OPERATIONS
         PLUS, MINUS, TIMES, DIVIDE, ASSIGN, MOD, EXPONENT, 
@@ -44,6 +44,7 @@ class CalcLexer(Lexer):
     
     LCURLY  = r'\{'
     RCURLY  = r'\}'
+    COMMA   = r'\,' # <---------- New Token
 
     #MATHEMATICAL OPERATIONS
     PLUS     = r'\+'
