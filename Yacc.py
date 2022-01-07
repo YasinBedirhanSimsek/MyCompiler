@@ -1,16 +1,18 @@
 from sly import Parser
-import sly
 from Lex import CalcLexer  
 
 class CalcParser(Parser):
 
+    debugfile = 'parser.out'
+
     tokens = CalcLexer.tokens
 
-    precedence = (
-       ('left', EQUALS),
+    precedence = (  
+       ('left', IS_EQUAL, IS_NOT_EQUAL),
        ('left', PLUS, MINUS),
-       ('left', TIMES, DIVIDE),
+       ('left', DIVIDE, TIMES, MOD),
        ('right', UMINUS),
+       ("right", EXPONENT),     
     )
 
     def __init__(self):
@@ -28,101 +30,182 @@ class CalcParser(Parser):
 
     @_("ASSIGNMENT")
     def STATEMENT(self, production):
-        if(production.ASSIGNMENT):
-            print(production.ASSIGNMENT)
-        return
+        return ('NODE_STATEMENT', production.ASSIGNMENT)
 
     @_("EXPRESSION")
     def STATEMENT(self, production):
-        print(production.EXPRESSION)
-        return
+        return ('NODE_STATEMENT', production.EXPRESSION)
 
-    #######################################################################################    
-    #Component Expression
-    @_('CEXPR')  
-    def STATEMENT(self, production):       
-        return production.CEXPR
-    
+    @_("CONDITIONAL")
+    def STATEMENT(self, production):
+        return ('NODE_STATEMENT', production.CONDITIONAL) 
+
+    ####################################################################################### 
+     
     #ASSIGNMENT : ID = EXPRESSION
-    
     @_("ID ASSIGN EXPRESSION")
     def ASSIGNMENT(self, production):
-        print('DEBUG:', 'ID ASSIGN EXPRESSION', production.ID, production.EXPRESSION)
-        self.names[production.ID] = production.EXPRESSION
+        return ('NODE_ASSIGNMENT', production.ID, production.EXPRESSION)
     
-    #######################################################################################
-    
-    
-    @_('IF EXPRESSION STATEMENT ELSE STATEMENT')
-    def CEXPR(self, production):
-        print('DEBUG:', production.EXPRESSION, production.STATEMENT0, production.STATEMENT1)
-        return production.STATEMENT0 if production.EXPRESSION else production.STATEMENT1
-
-    @_('IF EXPRESSION EXPRESSION ELSE EXPRESSION')
-    def CEXPR(self, production):
-        print('DEBUG:', production.EXPRESSION0, production.EXPRESSION1, production.EXPRESSION2)
-        return production.EXPRESSION1 if production.EXPRESSION0 else production.EXPRESSION2
-
     ##########################################################################################
-    
-    # ------------------> EXPRESSION : EXPRESSION ** EXPRESSION   <------------------
-    @_('EXPRESSION EXPONENT EXPRESSION')
-    def EXPRESSION(self, production):
-        return production.EXPRESSION0 ** production.EXPRESSION1
 
-    #EXPRESSION : EXPRESSION + EXPRESSION
-    @_("EXPRESSION PLUS EXPRESSION")
-    def EXPRESSION(self, production):
-        return production.EXPRESSION0 + production.EXPRESSION1
+    #CONDITIONAL : IF ( EXPRESSION ) { STATEMENT }
+    @_("IF LPAREN EXPRESSION RPAREN LCURLY STATEMENT RCURLY ")
+    def CONDITIONAL(self, production):   
+        return ('NODE_IF', production.EXPRESSION, production.STATEMENT)
 
-    #EXPRESSION : EXPRESSION - EXPRESSION
-    @_("EXPRESSION MINUS EXPRESSION")
-    def EXPRESSION(self, production):
-        return production.EXPRESSION0 - production.EXPRESSION1
+    #CONDITIONAL : IF ( EXPRESSION ) { STATEMENT } ELSE { STATEMENT } 
+    @_("IF LPAREN EXPRESSION RPAREN LCURLY STATEMENT RCURLY ")
+    def CONDITIONAL(self, production):   
+        return ('NODE_IF', production.EXPRESSION, production.STATEMENT0, production.STATEMENT1)
 
-    #EXPRESSION : EXPRESSION * EXPRESSION   
-    @_("EXPRESSION TIMES EXPRESSION")
-    def EXPRESSION(self, production):
-        return (production.EXPRESSION0 * production.EXPRESSION1)
-
-    #EXPRESSION : EXPRESSION / EXPRESSION   
-    @_("EXPRESSION DIVIDE EXPRESSION")
-    def EXPRESSION(self, production):
-        return (production.EXPRESSION0 / production.EXPRESSION1)
-    
-    # ------------------> EXPRESSION : EXPRESSION % EXPRESSION   <------------------
-    @_('EXPRESSION MOD EXPRESSION')
-    def EXPRESSION(self, production):
-        return production.EXPRESSION0 % production.EXPRESSION1
-    
-    # ------------------> EXPRESSION : EXPRESSION == EXPRESSION    <-----------------
-    @_('EXPRESSION EQUALS EXPRESSION')
-    def EXPRESSION(self, production):
-        return production.EXPRESSION0 == production.EXPRESSION1
-
-    #EXPRESSION : -EXPRESSION 
-    @_('MINUS EXPRESSION %prec UMINUS')
-    def EXPRESSION(self, production):
-        return -production.EXPRESSION
-
+    ##########################################################################################  
+      
     #EXPRESSION : NUMBER
     @_("NUMBER")
     def EXPRESSION(self, production):
-        return production.NUMBER
-
-    #EXPRESSION : ( EXPRESSION )
-    @_('LPAREN EXPRESSION RPAREN')
-    def EXPRESSION(self, production):
-        return production.EXPRESSION
+        return ('NODE_NUMBER', production.NUMBER)
 
     #EXPRESSION : ID
     @_("ID")
     def EXPRESSION(self, production):
-        try:
-            return self.names[production.ID]
-        except LookupError:
-            print(f'Undefined name {production.ID!r}')
+        return('NODE_ID', production.ID)
+
+    #EXPRESSION : ( EXPRESSION )
+    @_('LPAREN EXPRESSION RPAREN')
+    def EXPRESSION(self, production):
+        return ('NODE_LP_EXPRESSION_RP', production.LPAREN, production.EXPRESSION, production.RPAREN)
+
+    #EXPRESSION : -EXPRESSION 
+    @_('MINUS EXPRESSION %prec UMINUS')
+    def EXPRESSION(self, production):
+        return ('NODE_UMINUS', production.EXPRESSION)
+
+    #EXPRESSION : EXPRESSION + EXPRESSION
+    @_("EXPRESSION PLUS EXPRESSION")
+    def EXPRESSION(self, production):
+        return ('NODE_PLUS', production.EXPRESSION0, production.EXPRESSION1)
+
+    #EXPRESSION : EXPRESSION - EXPRESSION
+    @_("EXPRESSION MINUS EXPRESSION")
+    def EXPRESSION(self, production):
+        return ('NODE_MINUS', production.EXPRESSION0, production.EXPRESSION1)
+
+    #EXPRESSION : EXPRESSION * EXPRESSION   
+    @_("EXPRESSION TIMES EXPRESSION")
+    def EXPRESSION(self, production):
+        return ('NODE_TIMES', production.EXPRESSION0, production.EXPRESSION1)
+
+    #EXPRESSION : EXPRESSION / EXPRESSION   
+    @_("EXPRESSION DIVIDE EXPRESSION")
+    def EXPRESSION(self, production):
+        return ('NODE_DIVIDE', production.EXPRESSION0, production.EXPRESSION1)
+    
+    #EXPRESSION : EXPRESSION % EXPRESSION
+    @_('EXPRESSION MOD EXPRESSION')
+    def EXPRESSION(self, production):
+        return ('NODE_MOD', production.EXPRESSION0, production.EXPRESSION1)
+
+    #EXPRESSION : EXPRESSION ** EXPRESSION
+    @_('EXPRESSION EXPONENT EXPRESSION')
+    def EXPRESSION(self, production):
+        return ('NODE_EXPONENT', production.EXPRESSION0, production.EXPRESSION1)  
+    
+    ##########################################################################################  
+
+    #EXPRESSION : EXPRESSION == EXPRESSION
+    @_('EXPRESSION IS_EQUAL EXPRESSION')
+    def EXPRESSION(self, production):
+        return ('NODE_IS_EQUAL', production.EXPRESSION0, production.EXPRESSION1)
+
+    @_('EXPRESSION IS_NOT_EQUAL EXPRESSION')
+    def EXPRESSION(self, production):
+        return ('NODE_IS_NOT_EQUAL', production.EXPRESSION0, production.EXPRESSION1)
 
     #######################################################################################
 
+    def eval_ast(self, ast):
+
+        if(ast == None):
+            return
+
+        #############################################
+
+        elif(ast[0] == 'NODE_STATEMENT'):
+            return self.eval_ast(ast[1])
+
+        #############################################
+
+        elif(ast[0] == 'NODE_ASSIGNMENT'):
+            try:
+                self.names[ast[1]] = self.eval_ast(ast[2])      
+                return self.names[ast[1]]
+            except LookupError:
+                print(f'Undefined name {ast[1]!r}')
+
+        #############################################
+
+        elif(ast[0] == 'NODE_IF'):
+            return self.eval_ast(ast[2]) if self.eval_ast(ast[1]) == True else None
+
+        elif(ast[0] == 'NODE_IF_ELSE'):  
+            return self.eval_ast(ast[2]) if self.eval_ast(ast[1]) == True else self.eval_ast(ast[1])
+
+        #############################################
+
+        elif(ast[0] == 'NODE_ID'):
+            return self.names[ast[1]]
+
+        elif(ast[0] == 'NODE_NUMBER'):
+            return ast[1]
+   
+        elif(ast[0] == 'NODE_LP_EXPRESSION_RP'):
+           return self.eval_ast(ast[2])
+
+        elif(ast[0] == 'NODE_UMINUS'):
+            return -self.eval_ast(ast[1])
+
+        elif(ast[0] == 'NODE_PLUS'):
+            return self.eval_ast(ast[1]) + self.eval_ast(ast[2])
+
+        elif(ast[0] == 'NODE_MINUS'):
+            return self.eval_ast(ast[1]) - self.eval_ast(ast[2])
+
+        elif(ast[0] == 'NODE_TIMES'):
+            return self.eval_ast(ast[1]) * self.eval_ast(ast[2])
+
+        elif(ast[0] == 'NODE_DIVIDE'):
+            return self.eval_ast(ast[1]) / self.eval_ast(ast[2])
+
+        elif(ast[0] == 'NODE_MOD'):
+            return self.eval_ast(ast[1]) % self.eval_ast(ast[2])
+
+        elif(ast[0] == 'NODE_EXPONENT'):
+            return self.eval_ast(ast[1]) ** self.eval_ast(ast[2])
+
+        #############################################
+
+        elif(ast[0] == 'NODE_IS_EQUAL'):
+            return self.eval_ast(ast[1]) == self.eval_ast(ast[2])
+
+        elif(ast[0] == 'NODE_IS_NOT_EQUAL'):
+            return self.eval_ast(ast[1]) != self.eval_ast(ast[2])
+
+    #######################################################################################
+
+    def parse(self, tokens):
+        result = super(CalcParser, self).parse(tokens)
+
+        x = None
+
+        if type(result) == tuple:
+            x = self.eval_ast(result)
+        else:
+            x = result
+
+        print(x)
+
+        return x
+
+    #######################################################################################
     

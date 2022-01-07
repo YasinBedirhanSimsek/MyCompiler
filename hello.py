@@ -8,6 +8,8 @@ from Yacc import CalcParser
 #While
 #Function
 
+text = '''( (3) * 3 + 2 )'''
+
 if __name__ == '__main__':
                  
     lexer  = CalcLexer()
@@ -15,7 +17,8 @@ if __name__ == '__main__':
 
     while True:
         try:
-            text = input('calc > ')
+           # text = input('calc > ')
             result = parser.parse(lexer.tokenize(text))
+            break
         except EOFError:
             break

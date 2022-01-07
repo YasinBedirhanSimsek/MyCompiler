@@ -14,20 +14,17 @@ class CalcLexer(Lexer):
         LCURLY, RCURLY,
         
         #OPERATIONS
-        PLUS, MINUS, TIMES, DIVIDE, ASSIGN, MOD, EXPONENT, # I added MOD and EXPONENT operation
+        PLUS, MINUS, TIMES, DIVIDE, ASSIGN, MOD, EXPONENT, 
         
-        BITWISE_OR, BITWISE_AND, BITWISE_NOT,
+        BITWISE_OR, BITWISE_AND,
         
         #LOGIC
         GREATER_THAN, GREATER_THAN_EQ, LOWER_THAN, LOWER_THAN_EQ,
 
-        OR, AND,  IS_NOT_EQUAL, EQUALS, # I added EQUALS logic token -> "IS_EQUAL" dont need <-
+        OR, AND,  IS_NOT_EQUAL, IS_EQUAL,
         
         #CONDITIONAL
-        IF, ELSE_IF, ELSE, THEN,
-
-        #LOOPS
-        WHILE, FOR, BREAK  
+        IF, ELSE
     }
 
     # String containing ignored characters (between tokens)
@@ -48,43 +45,37 @@ class CalcLexer(Lexer):
     LCURLY  = r'\{'
     RCURLY  = r'\}'
 
-    #OPERATIONS
-    EXPONENT = r'\*\*' #  <-------
-    EQUALS = r'=='     #  <-------
-    PLUS    = r'\+'
-    MINUS   = r'-'
-    TIMES   = r'\*'
-    DIVIDE  = r'/'
-    MOD = r'%'
-
-    ASSIGN  = r'='
+    #MATHEMATICAL OPERATIONS
+    PLUS     = r'\+'
+    MINUS    = r'-'
+    EXPONENT = r'\*\*' 
+    TIMES    = r'\*'
+    DIVIDE   = r'/'
+    MOD      = r'%'
     
+    #BITWISE OPERATIONS
     BITWISE_OR  = r'\|'
     BITWISE_AND = r'\&'
-    BITWISE_NOT = r'\!'
 
-    #LOGIC
-    GREATER_THAN_EQ   = r'>='
-    GREATER_THAN      = r'>'
-    
-    LOWER_THAN_EQ  = r'<='
-    LOWER_THAN     = r'<'
+    #LOGICAL CHECKS
+    GREATER_THAN_EQ = r'>='
+    GREATER_THAN    = r'>'
+    LOWER_THAN_EQ   = r'<='
+    LOWER_THAN      = r'<'
 
-    #IS_EQUAL     = r'\?=' I think we don't need this line because I already add EQUALS operation
+    IS_EQUAL     = r'==' 
     IS_NOT_EQUAL = r'\!='
 
-    ID['or']  = OR
-    ID['and'] = AND
+    #ASSIGNMENT
+    ASSIGN   = r'='
 
     #CONDITIONAL
-    ID['if']      = IF
-    ID['else if'] = ELSE_IF
-    ID['else']    = ELSE
+    ID['if']   = IF
+    ID['else'] = ELSE
+    ID['or']   = OR
+    ID['and']  = AND
 
     #LOOPS
-    ID['while'] = WHILE    
-    ID['for']   = FOR 
-    ID['break'] = BREAK
 
     ############################################################
 
