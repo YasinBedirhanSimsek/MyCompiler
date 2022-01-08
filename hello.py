@@ -13,16 +13,7 @@ from Yacc import CalcParser
 #text4 = '''asd (x, y, z)'''
 #text5 = '''x'''
 
-text = '''if (3 == 3) { 
-    1 + 1; 
-    3 + 4;
-
-    if(1 == 1) {
-
-        4*4;
-    };
-
-};'''
+text = ''' '''
 
 if __name__ == '__main__':
                  

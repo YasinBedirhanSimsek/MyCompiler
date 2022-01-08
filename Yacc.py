@@ -36,10 +36,15 @@ class CalcParser(Parser):
     @_('STATEMENT SEMI_COL STATEMENT_LIST')
     def STATEMENT_LIST(self, production):
         return ('NODE_STATEMENT_LIST', production.STATEMENT, production.STATEMENT_LIST)
-    
+
     @_('STATEMENT SEMI_COL')
     def STATEMENT_LIST(self, production):
         return ('NODE_STATEMENT_LIST', production.STATEMENT)
+
+    @_('STATEMENT error')
+    def STATEMENT_LIST(self, production):
+        print("Expected ;")
+        print(production.error)
 
     @_('ASSIGNMENT')
     def STATEMENT(self, production):
@@ -50,12 +55,20 @@ class CalcParser(Parser):
         return ('NODE_STATEMENT', production.EXPRESSION)
 
     @_('LOOP')
-    def STATEMENT(self, production):
+    def STATEMENT_LIST(self, production):
+        return ('NODE_STATEMENT', production.LOOP) 
+
+    @_('LOOP SEMI_COL')
+    def STATEMENT_LIST(self, production):
         return ('NODE_STATEMENT', production.LOOP) 
 
     @_('CONDITIONAL')
-    def STATEMENT(self, production):
-        return ('NODE_STATEMENT', production.CONDITIONAL) 
+    def STATEMENT_LIST(self, production):
+        return ('NODE_STATEMENT_LIST', production.CONDITIONAL) 
+
+    @_('CONDITIONAL SEMI_COL')
+    def STATEMENT_LIST(self, production):
+        return ('NODE_STATEMENT_LIST', production.CONDITIONAL) 
 
     @_('FUNCTIONAL')
     def STATEMENT(self, production):
