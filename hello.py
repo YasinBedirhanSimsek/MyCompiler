@@ -6,6 +6,24 @@ from Yacc import CalcParser
 
 #text = '''if (3==5) { 3 + 2 } else if (3==4) { 1*1 } else if (3==1) { 49 } else { 3 * 2 }'''
 
+#text0 = '''function asd (a, b, c) { a = 5 + 1}'''
+#text1 = '''x = 0'''
+#text2 = '''y = 1'''
+#text3 = '''z = 2 '''
+#text4 = '''asd (x, y, z)'''
+#text5 = '''x'''
+
+text = '''if (3 == 3) { 
+    1 + 1; 
+    3 + 4;
+
+    if(1 == 1) {
+
+        4*4;
+    };
+
+};'''
+
 if __name__ == '__main__':
                  
     lexer  = CalcLexer()
@@ -13,7 +31,9 @@ if __name__ == '__main__':
 
     while True:
         try:
-            text = input('calc > ')
+            #text = input('calc > ')
             result = parser.parse(lexer.tokenize(text))
-        except EOFError:
+            break
+        except Exception as e:
+            print(e)
             break

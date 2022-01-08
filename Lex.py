@@ -9,7 +9,7 @@ class CalcLexer(Lexer):
         ID, NUMBER,
          
         #SYMBOLS
-        LPAREN, RPAREN,
+        LPAREN, RPAREN, SEMI_COL,
         
         LCURLY, RCURLY, COMMA, 
         
@@ -21,7 +21,7 @@ class CalcLexer(Lexer):
         #LOGIC
         GREATER_THAN, GREATER_THAN_EQ, LOWER_THAN, LOWER_THAN_EQ,
 
-        OR, AND,  IS_NOT_EQUAL, IS_EQUAL,
+        OR, AND, IS_NOT_EQUAL, IS_EQUAL,
 
         #LOOP
         WHILE,
@@ -32,6 +32,8 @@ class CalcLexer(Lexer):
         #FUNCTION
         FUNCTION
     }
+
+    literals = {'\n'}
 
     # String containing ignored characters (between tokens)
     ignore = ' \t'
@@ -48,9 +50,10 @@ class CalcLexer(Lexer):
     LPAREN  = r'\('
     RPAREN  = r'\)'
     
-    LCURLY  = r'\{'
-    RCURLY  = r'\}'
-    COMMA   = r'\,' # <---------- New Token
+    LCURLY   = r'\{'
+    RCURLY   = r'\}'
+    COMMA    = r'\,'
+    SEMI_COL = r';'
 
     #MATHEMATICAL OPERATIONS
     PLUS     = r'\+'
