@@ -43,14 +43,14 @@ Rule 39    EMPTY -> <empty>
 
 Unused terminals:
 
-    AND
-    GREATER_THAN
-    LOWER_THAN
-    BITWISE_OR
-    GREATER_THAN_EQ
     OR
+    LOWER_THAN
+    GREATER_THAN
     BITWISE_AND
+    GREATER_THAN_EQ
+    BITWISE_OR
     LOWER_THAN_EQ
+    AND
 
 Terminals, with rules where they appear:
 
