@@ -33,8 +33,8 @@ class CalcParser(Parser):
         if not p:
             print('Syntax error at the last line')
             return
-
-        print('Syntax error around at the line #%r' %p.lineno)
+        else:
+            print('Syntax error around at the line #%r' %p.lineno)
 
     ############################## Grammar rules and actions ##############################
 
@@ -56,14 +56,10 @@ class CalcParser(Parser):
     def STATEMENT_LIST(self, production):
         return ('NODE_STATEMENT_LIST', production.STATEMENT)
 
-    @_('STATEMENT error')
-    def STATEMENT_LIST(self, production):
-        print("Expected ;")
-        print(production.error)
-
     @_('ASSIGNMENT')
     def STATEMENT(self, production):
-        self.allIDs.append(production.ASSIGNMENT[1])
+        if not production.ASSIGNMENT[1] in self.allIDs:
+            self.allIDs.append(production.ASSIGNMENT[1])
         return ('NODE_STATEMENT', production.ASSIGNMENT)
 
     @_('EXPRESSION')
@@ -71,20 +67,12 @@ class CalcParser(Parser):
         return ('NODE_STATEMENT', production.EXPRESSION)
 
     @_('LOOP')
-    def STATEMENT_LIST(self, production):
-        return ('NODE_STATEMENT', production.LOOP) 
-
-    @_('LOOP SEMI_COL')
-    def STATEMENT_LIST(self, production):
+    def STATEMENT(self, production):
         return ('NODE_STATEMENT', production.LOOP) 
 
     @_('CONDITIONAL')
-    def STATEMENT_LIST(self, production):
-        return ('NODE_STATEMENT_LIST', production.CONDITIONAL) 
-
-    @_('CONDITIONAL SEMI_COL')
-    def STATEMENT_LIST(self, production):
-        return ('NODE_STATEMENT_LIST', production.CONDITIONAL) 
+    def STATEMENT(self, production):
+        return ('NODE_STATEMENT', production.CONDITIONAL) 
 
     @_('FUNCTIONAL')
     def STATEMENT(self, production):
@@ -162,15 +150,17 @@ class CalcParser(Parser):
     #PARAM_LIST : ID
     @_('ID')
     def PARAM_LIST(self, production):
-        self.allIDs.append(production.ID)
-        self.allIDs_local_var_inc += 1
+        if not production.ID in self.allIDs:
+            self.allIDs.append()
+            self.allIDs_local_var_inc += 1
         return (production.ID,)
     
     #PARAM_LIST : ID, PARAM_LIST
     @_('ID COMMA PARAM_LIST')
     def PARAM_LIST(self, production):
-        self.allIDs.append(production.ID)
-        self.allIDs_local_var_inc += 1
+        if not production.ID in self.allIDs:
+            self.allIDs.append()
+            self.allIDs_local_var_inc += 1
         return (production.ID, *production.PARAM_LIST)
 
     #############################################  
@@ -531,8 +521,3 @@ class CalcParser(Parser):
         return x
 
     #######################################################################################
-
-    #CONDITIONAL : IF error { STATEMENT_LIST } 
-    @_('IF LPAREN error RPAREN LCURLY STATEMENT_LIST RCURLY')
-    def CONDITIONAL(self, production):   
-        print("BOOLEAN VALUE IS REQUIRED")

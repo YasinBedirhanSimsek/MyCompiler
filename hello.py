@@ -3,11 +3,24 @@ from Lex import CalcLexer
 from Yacc import CalcParser
 
 #Function
-
 text = '''
-if(3 + 2) {
-    a=3;
-}
+
+result = 0;
+
+function max(num1, num2) {
+
+   if (num1 > num2) {
+       result = num1;
+   }    
+   else {
+    result = num2;
+   };
+};
+
+max(3,5);
+
+result = result + 10;
+
 '''
 
 if __name__ == '__main__':
