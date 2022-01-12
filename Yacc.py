@@ -28,14 +28,6 @@ class CalcParser(Parser):
         self.local_func_names = None
         self.allIDs_local_var_inc = 0
 
-    def error(self, p):
-
-        if not p:
-            print('Syntax error at the last line')
-            return
-        else:
-            print('Syntax error around at the line #%r' %p.lineno)
-
     ############################## Grammar rules and actions ##############################
 
     #STATEMENT : ASSIGNMENT
@@ -48,11 +40,11 @@ class CalcParser(Parser):
 
     #STATEMENT : FUNCTIONAL
 
-    @_('STATEMENT SEMI_COL STATEMENT_LIST')
+    @_('STATEMENT STATEMENT_LIST')
     def STATEMENT_LIST(self, production):
         return ('NODE_STATEMENT_LIST', production.STATEMENT, production.STATEMENT_LIST)
 
-    @_('STATEMENT SEMI_COL')
+    @_('STATEMENT')
     def STATEMENT_LIST(self, production):
         return ('NODE_STATEMENT_LIST', production.STATEMENT)
 
@@ -62,15 +54,15 @@ class CalcParser(Parser):
             self.allIDs.append(production.ASSIGNMENT[1])
         return ('NODE_STATEMENT', production.ASSIGNMENT)
 
-    @_('EXPRESSION')
+    @_('EXPRESSION SEMI_COL')
     def STATEMENT(self, production):
         return ('NODE_STATEMENT', production.EXPRESSION)
 
-    @_('LOOP')
+    @_('LOOP', 'LOOP SEMI_COL')
     def STATEMENT(self, production):
         return ('NODE_STATEMENT', production.LOOP) 
 
-    @_('CONDITIONAL')
+    @_('CONDITIONAL', 'CONDITIONAL SEMI_COL')
     def STATEMENT(self, production):
         return ('NODE_STATEMENT', production.CONDITIONAL) 
 
@@ -80,25 +72,26 @@ class CalcParser(Parser):
 
     ####################################################################################### 
      
-    #ASSIGNMENT : ID = EXPRESSION
-    @_('ID ASSIGN EXPRESSION')
+    #ASSIGNMENT : ID = EXPRESSION ;
+    @_('ID ASSIGN EXPRESSION SEMI_COL')
     def ASSIGNMENT(self, production):
         return ('NODE_ASSIGNMENT', production.ID, production.EXPRESSION)
     
-    #ASSIGNMENT : ID = EXPRESSION, ASSIGNMENT 
+   #ASSIGNMENT : ID = EXPRESSION, ASSIGNMENT 
     @_("ID ASSIGN EXPRESSION COMMA ASSIGNMENT")
     def ASSIGNMENT(self, production):
         return ('NODE_ASSIGNMENT_EXP', production.ID, production.EXPRESSION, production.ASSIGNMENT)
 
     ########################################################################################## 
 
-    @_('WHILE LPAREN EXPRESSION RPAREN LCURLY STATEMENT_LIST RCURLY')
+    #LOOP : WHILE ( BOOL_EXPRESSION ) { STATEMENT_LIST }
+    @_('WHILE LPAREN BOOL_EXPRESSION RPAREN LCURLY STATEMENT_LIST RCURLY')
     def LOOP(self, production):
-        return ('NODE_WHILE', production.EXPRESSION, production.STATEMENT_LIST)
+        return ('NODE_WHILE', production.BOOL_EXPRESSION, production.STATEMENT_LIST)
 
     ##########################################################################################
 
-    #CONDITIONAL : IF ( BOOL_EXPRESSION ) { STATEMENT_LIST } 
+    #CONDITIONAL : IF ( BOOL_EXPRESSION ) { STATEMENT_LIST }
     @_('IF LPAREN BOOL_EXPRESSION RPAREN LCURLY STATEMENT_LIST RCURLY')
     def CONDITIONAL(self, production):   
         return ("NODE_CONDITIONAL", production.BOOL_EXPRESSION, production.STATEMENT_LIST)
@@ -120,8 +113,9 @@ class CalcParser(Parser):
     def FUNCTIONAL(self, production):
         return ('NODE_FUNCTIONAL', production.FUNCTION_DEFINITION)
 
-    #FUNCTION_DEFINITION : FUNCTION ID (PARAM_LIST) { STATEMENT_LIST }
-    @_('FUNCTION ID LPAREN PARAM_LIST RPAREN LCURLY STATEMENT_LIST RCURLY')  
+    #FUNCTION_DEFINITION : FUNCTION ID (PARAM_LIST) { STATEMENT_LIST } | FUNCTION ID (PARAM_LIST) { STATEMENT_LIST } ;
+    @_('FUNCTION ID LPAREN PARAM_LIST RPAREN LCURLY STATEMENT_LIST RCURLY', 
+       'FUNCTION ID LPAREN PARAM_LIST RPAREN LCURLY STATEMENT_LIST RCURLY SEMI_COL')  
     def FUNCTION_DEFINITION(self, production):
 
         node = production.STATEMENT_LIST
@@ -138,6 +132,8 @@ class CalcParser(Parser):
 
         for i in range(self.allIDs_local_var_inc):
             self.allIDs.pop()
+
+        self.allIDs.append(production.ID)
 
         return ('NODE_FUNCTION_DEFINITION', production.ID, production.PARAM_LIST, production.STATEMENT_LIST)
 
@@ -170,9 +166,11 @@ class CalcParser(Parser):
     def FUNCTIONAL(self, production):
         return ('NODE_FUNCTIONAL', production.FUNCTION_CALL)
 
-    #FUNCTION_CALL : ID (VALUE_LIST)
-    @_('ID LPAREN VALUE_LIST RPAREN')  
+    #FUNCTION_CALL : ID (VALUE_LIST) ;
+    @_('ID LPAREN VALUE_LIST RPAREN SEMI_COL')  
     def FUNCTION_CALL(self, production):
+        if production.ID not in self.allIDs:
+            print("Undefined Reference to " + production.ID + " at line " + str(production.lineno))
         return ('NODE_FUNCTION_CALL', production.ID, production.VALUE_LIST)
 
     #VALUE_LIST : EMPTY
@@ -197,7 +195,7 @@ class CalcParser(Parser):
     def EXPRESSION(self, production):
         return ('NODE_NUMBER', production.NUMBER)
 
-    #EXPRESSION : ID
+    #EXPRESSION : ID 
     @_("ID")
     def EXPRESSION(self, production):
         if production.ID not in self.allIDs:
@@ -246,7 +244,7 @@ class CalcParser(Parser):
     
     ##########################################################################################  
 
-     #BOOL_EXPRESSION : ( BOOL_EXPRESSION )
+    #BOOL_EXPRESSION : ( BOOL_EXPRESSION )
     @_('LPAREN BOOL_EXPRESSION RPAREN')
     def BOOL_EXPRESSION(self, production):
         return ('NODE_LP_BOOL_EXPRESSION_RP', production.BOOL_EXPRESSION)
@@ -517,6 +515,10 @@ class CalcParser(Parser):
     def parse(self, tokens):
         result = super(CalcParser, self).parse(tokens)
 
+        print()
+        print("EVALUATION RESULT")
+        print()
+
         x = None
 
         if type(result) == tuple:
@@ -530,17 +532,85 @@ class CalcParser(Parser):
 
     #######################################################################################
 
-    #CONDITIONAL : IF error { STATEMENT_LIST } 
-    @_('IF error SEMI_COL')
-    def CONDITIONAL(self, production):   
-        print("Invalid if block")
+    #MISSING SEMI COLUMN
+    #ASSIGNMENT : ID = EXPRESSION 
+    @_('ID ASSIGN EXPRESSION error')
+    def ASSIGNMENT(self, production):
+        print('Expected ; or , at line', production.lineno)
 
-    #CONDITIONAL : IF error { STATEMENT_LIST } 
-    @_('IF LPAREN error LCURLY STATEMENT_LIST RCURLY')
-    def CONDITIONAL(self, production):   
-        print("Missing ")
+    #INVALID EXPRESSION
+    #ASSIGNMENT : ID = error ; 
+    @_('ID ASSIGN error SEMI_COL')
+    def ASSIGNMENT(self, production):
+        print('Invalid expression at line', production.lineno)
 
-    #CONDITIONAL : IF ( error ) { STATEMENT_LIST } 
-    @_('IF LPAREN error RPAREN LCURLY STATEMENT_LIST RCURLY')
+    #######################################################################################
+    
+    #INVALID CONDITIONAL
+    #LOOP : WHILE error { STATEMENT_LIST }
+    @_('WHILE error LCURLY STATEMENT_LIST RCURLY')
+    def LOOP(self, production):
+        print('Invalid condition at line', production.lineno)
+
+    #INVALID STATEMENT LIST
+    #LOOP : WHILE ( BOOL_EXPRESSION ) error
+    @_('WHILE LPAREN BOOL_EXPRESSION RPAREN error')
+    def LOOP(self, production):
+        print('Invalid statement block at line', production.lineno)
+
+    #######################################################################################
+
+    #MISSING SEMI COLUMN
+    #FUNCTION_CALL : ID (VALUE_LIST) 
+    @_('ID LPAREN VALUE_LIST RPAREN error')  
+    def FUNCTION_CALL(self, production):
+        print('Expected ; at line', production.lineno)
+
+    #INVALID PARAMETER LIST
+    #FUNCTION_CALL : ID error ;
+    @_('ID error SEMI_COL')  
+    def FUNCTION_CALL(self, production):
+        print('Invalid paramters list at line', production.lineno)
+
+    #######################################################################################
+
+    #INVALID PARAMETER LIST
+    #FUNCTION_DEFINITION : FUNCTION ID error { STATEMENT_LIST } | FUNCTION ID error { STATEMENT_LIST } ;
+    @_('FUNCTION ID error LCURLY STATEMENT_LIST RCURLY', 
+       'FUNCTION ID error LCURLY STATEMENT_LIST RCURLY SEMI_COL')  
+    def FUNCTION_DEFINITION(self, production):
+        print('Invalid paramters list at line', production.lineno)
+
+    #INVALID STATEMENT LIST
+    #FUNCTION_DEFINITION : FUNCTION ID (PARAM_LIST) error | FUNCTION ID (PARAM_LIST) error ;
+    @_('FUNCTION ID LPAREN PARAM_LIST RPAREN error', 
+       'FUNCTION ID LPAREN PARAM_LIST RPAREN error SEMI_COL')  
+    def FUNCTION_DEFINITION(self, production):
+        print('Invalid statement block at line', production.lineno)
+
+    #INVALID FUNCTION IDENTIFIER
+    #FUNCTION_DEFINITION : FUNCTION error (PARAM_LIST) { STATEMENT_LIST } | FUNCTION error (PARAM_LIST) { STATEMENT_LIST } ;
+    @_('FUNCTION error LPAREN PARAM_LIST RPAREN LCURLY STATEMENT_LIST RCURLY', 
+       'FUNCTION error LPAREN PARAM_LIST RPAREN LCURLY STATEMENT_LIST RCURLY SEMI_COL')  
+    def FUNCTION_DEFINITION(self, production):
+        print('Invalid function identifier at line', production.lineno)
+
+    #######################################################################################
+
+    #INVALID CONDITIONAL
+    #CONDITIONAL : IF error { STATEMENT_LIST }
+    @_('IF error LCURLY STATEMENT_LIST RCURLY',
+       'IF error LCURLY STATEMENT_LIST RCURLY ELSE LCURLY STATEMENT_LIST RCURLY',
+       'IF error LCURLY STATEMENT_LIST RCURLY ELSE CONDITIONAL')
     def CONDITIONAL(self, production):   
-        print("Condition must be boolean")
+        print('Invalid condition at line', production.lineno)
+
+    #INVALID STATEMENT LIST
+    #CONDITIONAL : IF ( BOOL_EXPRESSION ) error
+    @_('IF LPAREN BOOL_EXPRESSION RPAREN error',
+       'IF LPAREN BOOL_EXPRESSION RPAREN error ELSE LCURLY STATEMENT_LIST RCURLY',
+       'IF LPAREN BOOL_EXPRESSION RPAREN LCURLY STATEMENT_LIST RCURLY ELSE error')
+    def CONDITIONAL(self, production):   
+        print('Invalid statement block at line', production.lineno)
+
+    #######################################################################################
