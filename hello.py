@@ -17,6 +17,10 @@ function max(num1, num2) {
    };
 };
 
+if ( (5!=5) or (2!=3) ) {
+    q = 2323;
+};
+
 max(3,5);
 
 result = result + 10;

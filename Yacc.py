@@ -98,20 +98,20 @@ class CalcParser(Parser):
 
     ##########################################################################################
 
-    #CONDITIONAL : IF ( EXPRESSION ) { STATEMENT_LIST } 
-    @_('IF LPAREN EXPRESSION RPAREN LCURLY STATEMENT_LIST RCURLY')
+    #CONDITIONAL : IF ( BOOL_EXPRESSION ) { STATEMENT_LIST } 
+    @_('IF LPAREN BOOL_EXPRESSION RPAREN LCURLY STATEMENT_LIST RCURLY')
     def CONDITIONAL(self, production):   
-        return ("NODE_CONDITIONAL", production.EXPRESSION, production.STATEMENT_LIST)
+        return ("NODE_CONDITIONAL", production.BOOL_EXPRESSION, production.STATEMENT_LIST)
 
-    #CONDITIONAL : IF ( EXPRESSION ) { STATEMENT_LIST } ELSE { STATEMENT_LIST } 
-    @_('IF LPAREN EXPRESSION RPAREN LCURLY STATEMENT_LIST RCURLY ELSE LCURLY STATEMENT_LIST RCURLY')
+    #CONDITIONAL : IF ( BOOL_EXPRESSION ) { STATEMENT_LIST } ELSE { STATEMENT_LIST } 
+    @_('IF LPAREN BOOL_EXPRESSION RPAREN LCURLY STATEMENT_LIST RCURLY ELSE LCURLY STATEMENT_LIST RCURLY')
     def CONDITIONAL(self, production):   
-        return ("NODE_CONDITIONAL_ELSE", production.EXPRESSION, production.STATEMENT_LIST0, production.STATEMENT_LIST1)
+        return ("NODE_CONDITIONAL_ELSE", production.BOOL_EXPRESSION, production.STATEMENT_LIST0, production.STATEMENT_LIST1)
 
-    #CONDITIONAL : IF ( EXPRESSION ) { STATEMENT_LIST } ELSE CONDITIONAL 
-    @_('IF LPAREN EXPRESSION RPAREN LCURLY STATEMENT_LIST RCURLY ELSE CONDITIONAL')
+    #CONDITIONAL : IF ( BOOL_EXPRESSION ) { STATEMENT_LIST } ELSE CONDITIONAL 
+    @_('IF LPAREN BOOL_EXPRESSION RPAREN LCURLY STATEMENT_LIST RCURLY ELSE CONDITIONAL')
     def CONDITIONAL(self, production):   
-        return ("NODE_CONDITIONAL_ELSE_CONDITIONAL", production.EXPRESSION, production.STATEMENT_LIST, production.CONDITIONAL)
+        return ("NODE_CONDITIONAL_ELSE_CONDITIONAL", production.BOOL_EXPRESSION, production.STATEMENT_LIST, production.CONDITIONAL)
 
     ##########################################################################################  
 
@@ -151,7 +151,7 @@ class CalcParser(Parser):
     @_('ID')
     def PARAM_LIST(self, production):
         if not production.ID in self.allIDs:
-            self.allIDs.append()
+            self.allIDs.append(production.ID)
             self.allIDs_local_var_inc += 1
         return (production.ID,)
     
@@ -159,7 +159,7 @@ class CalcParser(Parser):
     @_('ID COMMA PARAM_LIST')
     def PARAM_LIST(self, production):
         if not production.ID in self.allIDs:
-            self.allIDs.append()
+            self.allIDs.append(production.ID)
             self.allIDs_local_var_inc += 1
         return (production.ID, *production.PARAM_LIST)
 
@@ -207,7 +207,7 @@ class CalcParser(Parser):
     #EXPRESSION : ( EXPRESSION )
     @_('LPAREN EXPRESSION RPAREN')
     def EXPRESSION(self, production):
-        return ('NODE_LP_EXPRESSION_RP', production.LPAREN, production.EXPRESSION, production.RPAREN)
+        return ('NODE_LP_EXPRESSION_RP', production.EXPRESSION)
 
     #EXPRESSION : -EXPRESSION 
     @_('MINUS EXPRESSION %prec UMINUS')
@@ -246,36 +246,41 @@ class CalcParser(Parser):
     
     ##########################################################################################  
 
-    #EXPRESSION : EXPRESSION == EXPRESSION
+     #BOOL_EXPRESSION : ( BOOL_EXPRESSION )
+    @_('LPAREN BOOL_EXPRESSION RPAREN')
+    def BOOL_EXPRESSION(self, production):
+        return ('NODE_LP_BOOL_EXPRESSION_RP', production.BOOL_EXPRESSION)
+
+    #BOOL_EXPRESSION : EXPRESSION == EXPRESSION
     @_('EXPRESSION IS_EQUAL EXPRESSION')
-    def EXPRESSION(self, production):
+    def BOOL_EXPRESSION(self, production):
         return ('NODE_IS_EQUAL', production.EXPRESSION0, production.EXPRESSION1)
 
-    #EXPRESSION : EXPRESSION != EXPRESSION
+    #BOOL_EXPRESSION : EXPRESSION != EXPRESSION
     @_('EXPRESSION IS_NOT_EQUAL EXPRESSION')
-    def EXPRESSION(self, production):
+    def BOOL_EXPRESSION(self, production):
         return ('NODE_IS_NOT_EQUAL', production.EXPRESSION0, production.EXPRESSION1)
 
-    #EXPRESSION : EXPRESSION >= EXPRESSION
+    #BOOL_EXPRESSION : EXPRESSION >= EXPRESSION
     @_('EXPRESSION GREATER_THAN_EQ EXPRESSION')
-    def EXPRESSION(self, production):
+    def BOOL_EXPRESSION(self, production):
         return ('NODE_GREATER_THAN_EQ', production.EXPRESSION0, production.EXPRESSION1)
 
-    #EXPRESSION : EXPRESSION > EXPRESSION
+    #BOOL_EXPRESSION : EXPRESSION > EXPRESSION
     @_('EXPRESSION GREATER_THAN EXPRESSION')
-    def EXPRESSION(self, production):
+    def BOOL_EXPRESSION(self, production):
         return ('NODE_GREATER_THAN', production.EXPRESSION0, production.EXPRESSION1)
 
-    #EXPRESSION : EXPRESSION <= EXPRESSION
+    #BOOL_EXPRESSION : EXPRESSION <= EXPRESSION
     @_('EXPRESSION LESS_THAN_EQ EXPRESSION')
-    def EXPRESSION(self, production):
+    def BOOL_EXPRESSION(self, production):
         return ('NODE_LESS_THAN_EQ', production.EXPRESSION0, production.EXPRESSION1)
 
-    #EXPRESSION : EXPRESSION < EXPRESSION
+    #BOOL_EXPRESSION : EXPRESSION < EXPRESSION
     @_('EXPRESSION LESS_THAN EXPRESSION')
-    def EXPRESSION(self, production):
+    def BOOL_EXPRESSION(self, production):
         return ('NODE_LESS_THAN', production.EXPRESSION0, production.EXPRESSION1)
-    
+
     #######################################################################################
 
     #EXPRESSION : EXPRESSION & EXPRESSION
@@ -290,15 +295,15 @@ class CalcParser(Parser):
 
     #######################################################################################
 
-    #EXPRESSION : EXPRESSION and EXPRESSION
-    @_('EXPRESSION AND EXPRESSION')
-    def EXPRESSION(self, production):
-        return ('NODE_AND', production.EXPRESSION0, production.EXPRESSION1)
+    #BOOL_EXPRESSION : BOOL_EXPRESSION and BOOL_EXPRESSION
+    @_('BOOL_EXPRESSION AND BOOL_EXPRESSION')
+    def BOOL_EXPRESSION(self, production):
+        return ('NODE_AND', production.BOOL_EXPRESSION0, production.BOOL_EXPRESSION1)
     
-    #EXPRESSION : EXPRESSION or EXPRESSION
-    @_('EXPRESSION OR EXPRESSION')
-    def EXPRESSION(self, production):
-        return ('NODE_OR', production.EXPRESSION0, production.EXPRESSION1)
+    #BOOL_EXPRESSION : BOOL_EXPRESSION or BOOL_EXPRESSION
+    @_('BOOL_EXPRESSION OR BOOL_EXPRESSION')
+    def BOOL_EXPRESSION(self, production):
+        return ('NODE_OR', production.BOOL_EXPRESSION0, production.BOOL_EXPRESSION1)
 
     #######################################################################################
 
@@ -445,7 +450,7 @@ class CalcParser(Parser):
             return ast[1]
    
         elif(ast[0] == 'NODE_LP_EXPRESSION_RP'):
-            return self.eval_ast(ast[2])
+            return self.eval_ast(ast[1])
 
         elif(ast[0] == 'NODE_UMINUS'):
             return -self.eval_ast(ast[1])
@@ -469,6 +474,9 @@ class CalcParser(Parser):
             return self.eval_ast(ast[1]) ** self.eval_ast(ast[2])
 
         #############################################
+
+        elif(ast[0] == 'NODE_LP_BOOL_EXPRESSION_RP'):
+            return self.eval_ast(ast[1])
 
         elif(ast[0] == 'NODE_IS_EQUAL'):
             return self.eval_ast(ast[1]) == self.eval_ast(ast[2])
@@ -521,3 +529,18 @@ class CalcParser(Parser):
         return x
 
     #######################################################################################
+
+    #CONDITIONAL : IF error { STATEMENT_LIST } 
+    @_('IF error SEMI_COL')
+    def CONDITIONAL(self, production):   
+        print("Invalid if block")
+
+    #CONDITIONAL : IF error { STATEMENT_LIST } 
+    @_('IF LPAREN error LCURLY STATEMENT_LIST RCURLY')
+    def CONDITIONAL(self, production):   
+        print("Missing ")
+
+    #CONDITIONAL : IF ( error ) { STATEMENT_LIST } 
+    @_('IF LPAREN error RPAREN LCURLY STATEMENT_LIST RCURLY')
+    def CONDITIONAL(self, production):   
+        print("Condition must be boolean")
