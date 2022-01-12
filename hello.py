@@ -4,16 +4,11 @@ from Yacc import CalcParser
 
 #Function
 
-#text = '''if (3==5) { 3 + 2 } else if (3==4) { 1*1 } else if (3==1) { 49 } else { 3 * 2 }'''
-
-#text = '''function asd (a, b, c) { a = 5 + 1;};'''
-#text1 = '''x = 0'''
-#text2 = '''y = 1'''
-#text3 = '''z = 2 '''
-#text4 = '''asd (x, y, z)'''
-#text5 = '''x'''
-
-text = ''' 3 + 2 '''
+text = '''
+if(3 + 2) {
+    a=3;
+}
+'''
 
 if __name__ == '__main__':
                  

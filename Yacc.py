@@ -9,7 +9,11 @@ class CalcParser(Parser):
     tokens = CalcLexer.tokens
 
     precedence = (
-       ('left', IS_EQUAL, IS_NOT_EQUAL),
+       ('left', OR),
+       ('left', AND),
+       ('left', BITWISE_AND),
+       ('left', BITWISE_OR),
+       ('left', LESS_THAN, LESS_THAN_EQ, GREATER_THAN, GREATER_THAN_EQ, IS_NOT_EQUAL, IS_EQUAL),
        ('left', PLUS, MINUS),
        ('left', DIVIDE, TIMES, MOD),
        ('right', UMINUS),
@@ -17,9 +21,20 @@ class CalcParser(Parser):
     )
 
     def __init__(self):
-        self.names = { }
+        self.allIDs = []
+        self.variables = { }
         self.functions = { }
+
         self.local_func_names = None
+        self.allIDs_local_var_inc = 0
+
+    def error(self, p):
+
+        if not p:
+            print('Syntax error at the last line')
+            return
+
+        print('Syntax error around at the line #%r' %p.lineno)
 
     ############################## Grammar rules and actions ##############################
 
@@ -48,6 +63,7 @@ class CalcParser(Parser):
 
     @_('ASSIGNMENT')
     def STATEMENT(self, production):
+        self.allIDs.append(production.ASSIGNMENT[1])
         return ('NODE_STATEMENT', production.ASSIGNMENT)
 
     @_('EXPRESSION')
@@ -119,21 +135,42 @@ class CalcParser(Parser):
     #FUNCTION_DEFINITION : FUNCTION ID (PARAM_LIST) { STATEMENT_LIST }
     @_('FUNCTION ID LPAREN PARAM_LIST RPAREN LCURLY STATEMENT_LIST RCURLY')  
     def FUNCTION_DEFINITION(self, production):
+
+        node = production.STATEMENT_LIST
+
+        while(True):
+
+            if(node[1][1][0] == 'NODE_ASSIGNMENT'):
+                self.allIDs_local_var_inc += 1
+
+            if(len(node) > 2):
+                node = node[2]
+            else:
+                break
+
+        for i in range(self.allIDs_local_var_inc):
+            self.allIDs.pop()
+
         return ('NODE_FUNCTION_DEFINITION', production.ID, production.PARAM_LIST, production.STATEMENT_LIST)
 
     #PARAM_LIST : EMPTY
     @_('EMPTY')
     def PARAM_LIST(self, production):
-        return production
+        self.allIDs_lenght = len(self.allIDs)
+        return None
 
     #PARAM_LIST : ID
     @_('ID')
     def PARAM_LIST(self, production):
+        self.allIDs.append(production.ID)
+        self.allIDs_local_var_inc += 1
         return (production.ID,)
     
     #PARAM_LIST : ID, PARAM_LIST
     @_('ID COMMA PARAM_LIST')
     def PARAM_LIST(self, production):
+        self.allIDs.append(production.ID)
+        self.allIDs_local_var_inc += 1
         return (production.ID, *production.PARAM_LIST)
 
     #############################################  
@@ -173,6 +210,8 @@ class CalcParser(Parser):
     #EXPRESSION : ID
     @_("ID")
     def EXPRESSION(self, production):
+        if production.ID not in self.allIDs:
+            print("Undefined Reference to " + production.ID + " at line " + str(production.lineno))
         return('NODE_ID', production.ID)
 
     #EXPRESSION : ( EXPRESSION )
@@ -222,9 +261,54 @@ class CalcParser(Parser):
     def EXPRESSION(self, production):
         return ('NODE_IS_EQUAL', production.EXPRESSION0, production.EXPRESSION1)
 
+    #EXPRESSION : EXPRESSION != EXPRESSION
     @_('EXPRESSION IS_NOT_EQUAL EXPRESSION')
     def EXPRESSION(self, production):
         return ('NODE_IS_NOT_EQUAL', production.EXPRESSION0, production.EXPRESSION1)
+
+    #EXPRESSION : EXPRESSION >= EXPRESSION
+    @_('EXPRESSION GREATER_THAN_EQ EXPRESSION')
+    def EXPRESSION(self, production):
+        return ('NODE_GREATER_THAN_EQ', production.EXPRESSION0, production.EXPRESSION1)
+
+    #EXPRESSION : EXPRESSION > EXPRESSION
+    @_('EXPRESSION GREATER_THAN EXPRESSION')
+    def EXPRESSION(self, production):
+        return ('NODE_GREATER_THAN', production.EXPRESSION0, production.EXPRESSION1)
+
+    #EXPRESSION : EXPRESSION <= EXPRESSION
+    @_('EXPRESSION LESS_THAN_EQ EXPRESSION')
+    def EXPRESSION(self, production):
+        return ('NODE_LESS_THAN_EQ', production.EXPRESSION0, production.EXPRESSION1)
+
+    #EXPRESSION : EXPRESSION < EXPRESSION
+    @_('EXPRESSION LESS_THAN EXPRESSION')
+    def EXPRESSION(self, production):
+        return ('NODE_LESS_THAN', production.EXPRESSION0, production.EXPRESSION1)
+    
+    #######################################################################################
+
+    #EXPRESSION : EXPRESSION & EXPRESSION
+    @_('EXPRESSION BITWISE_AND EXPRESSION')
+    def EXPRESSION(self, production):
+        return ('NODE_BITWISE_AND', production.EXPRESSION0, production.EXPRESSION1)
+    
+    #EXPRESSION : EXPRESSION | EXPRESSION
+    @_('EXPRESSION BITWISE_OR EXPRESSION')
+    def EXPRESSION(self, production):
+        return ('NODE_BITWISE_OR', production.EXPRESSION0, production.EXPRESSION1)
+
+    #######################################################################################
+
+    #EXPRESSION : EXPRESSION and EXPRESSION
+    @_('EXPRESSION AND EXPRESSION')
+    def EXPRESSION(self, production):
+        return ('NODE_AND', production.EXPRESSION0, production.EXPRESSION1)
+    
+    #EXPRESSION : EXPRESSION or EXPRESSION
+    @_('EXPRESSION OR EXPRESSION')
+    def EXPRESSION(self, production):
+        return ('NODE_OR', production.EXPRESSION0, production.EXPRESSION1)
 
     #######################################################################################
 
@@ -255,8 +339,8 @@ class CalcParser(Parser):
         elif(ast[0] == 'NODE_ASSIGNMENT'):
 
             if(self.local_func_names == None):
-                self.names[ast[1]] = self.eval_ast(ast[2]) 
-                return self.names[ast[1]]
+                self.variables[ast[1]] = self.eval_ast(ast[2]) 
+                return self.variables[ast[1]]
         
             else:
                 #If There is a local variable
@@ -264,9 +348,9 @@ class CalcParser(Parser):
                     self.local_func_names[ast[1]] = self.eval_ast(ast[2]) 
                     return self.local_func_names[ast[1]]
                 #There was no local variable, check globals
-                elif ast[1] in self.names:
-                    self.names[ast[1]] = self.eval_ast(ast[2])
-                    return self.names[ast[1]]
+                elif ast[1] in self.variables:
+                    self.variables[ast[1]] = self.eval_ast(ast[2])
+                    return self.variables[ast[1]]
                 #There was no id so create one in local variables
                 else:
                     self.local_func_names[ast[1]] = self.eval_ast(ast[2]) 
@@ -274,8 +358,8 @@ class CalcParser(Parser):
 
         elif(ast[0] == 'NODE_ASSIGNMENT_EXP'): 
             if(self.local_func_names == None):
-                self.names[ast[1]] = self.eval_ast(ast[2]) 
-                return self.names[ast[1]], self.eval_ast(ast[3]) 
+                self.variables[ast[1]] = self.eval_ast(ast[2]) 
+                return self.variables[ast[1]], self.eval_ast(ast[3]) 
         
             else:
                 #If There is a local variable
@@ -283,9 +367,9 @@ class CalcParser(Parser):
                     self.local_func_names[ast[1]] = self.eval_ast(ast[2]) 
                     return self.local_func_names[ast[1]], self.eval_ast(ast[3]) 
                 #There was no local variable, check globals
-                elif ast[1] in self.names:
-                    self.names[ast[1]] = self.eval_ast(ast[2])
-                    return self.names[ast[1]], self.eval_ast(ast[3]) 
+                elif ast[1] in self.variables:
+                    self.variables[ast[1]] = self.eval_ast(ast[2])
+                    return self.variables[ast[1]], self.eval_ast(ast[3]) 
                 #There was no id so create one in local variables
                 else:
                     self.local_func_names[ast[1]] = self.eval_ast(ast[2]) 
@@ -319,7 +403,11 @@ class CalcParser(Parser):
 
         elif(ast[0] == 'NODE_FUNCTION_DEFINITION'):
 
-            param_dic = { }
+            param_dic = { } 
+
+            if not ast[2]:
+                self.functions[ast[1]] = (ast[1], ast[2], ast[3], param_dic)
+                return
 
             for k in ast[2]:
                 param_dic[k] = None
@@ -332,12 +420,14 @@ class CalcParser(Parser):
 
             foo = self.functions[ast[1]]
 
-            values = [ self.eval_ast(val) for val in ast[2] ]
+            if ast[2]:
 
-            i = 0
-            for k in foo[3]:
-                foo[3][k] = values[i]          
-                i += 1
+                values = [ self.eval_ast(val) for val in ast[2] ]
+                
+                i = 0
+                for k in foo[3]:
+                    foo[3][k] = values[i]          
+                    i += 1
 
             self.local_func_names = foo[3]
             f_result = self.eval_ast(foo[2])
@@ -349,15 +439,15 @@ class CalcParser(Parser):
 
         elif(ast[0] == 'NODE_ID'):
             if(self.local_func_names == None):
-                if ast[1] in self.names:
-                    return self.names[ast[1]]
+                if ast[1] in self.variables:
+                    return self.variables[ast[1]]
                 else:
                     print("NO SUCH ID")
             else:
                 if ast[1] in self.local_func_names:
                     return self.local_func_names[ast[1]]
-                elif ast[1] in self.names:
-                    return self.names[ast[1]]
+                elif ast[1] in self.variables:
+                    return self.variables[ast[1]]
                 else:
                     print("NO SUCH ID")
 
@@ -396,6 +486,34 @@ class CalcParser(Parser):
         elif(ast[0] == 'NODE_IS_NOT_EQUAL'):
             return self.eval_ast(ast[1]) != self.eval_ast(ast[2])
 
+        elif(ast[0] == 'NODE_GREATER_THAN_EQ'):
+            return self.eval_ast(ast[1]) >= self.eval_ast(ast[2])
+
+        elif(ast[0] == 'NODE_GREATER_THAN'):
+            return self.eval_ast(ast[1]) > self.eval_ast(ast[2])
+
+        elif(ast[0] == 'NODE_LESS_THAN_EQ'):
+            return self.eval_ast(ast[1]) <= self.eval_ast(ast[2])
+
+        elif(ast[0] == 'NODE_LESS_THAN'):
+            return self.eval_ast(ast[1]) < self.eval_ast(ast[2])
+
+        #############################################
+
+        elif(ast[0] == 'NODE_BITWISE_AND'):
+            return self.eval_ast(ast[1]) & self.eval_ast(ast[2])
+
+        elif(ast[0] == 'NODE_BITWISE_OR'):
+            return self.eval_ast(ast[1]) | self.eval_ast(ast[2])
+        
+        #############################################
+
+        elif(ast[0] == 'NODE_AND'):
+            return True if (self.eval_ast(ast[1]) == True and self.eval_ast(ast[2]) == True) else False
+
+        elif(ast[0] == 'NODE_OR'):
+            return True if (self.eval_ast(ast[1]) == True or self.eval_ast(ast[2]) == True) else False
+
     #######################################################################################
 
     def parse(self, tokens):
@@ -413,4 +531,8 @@ class CalcParser(Parser):
         return x
 
     #######################################################################################
-    
+
+    #CONDITIONAL : IF error { STATEMENT_LIST } 
+    @_('IF LPAREN error RPAREN LCURLY STATEMENT_LIST RCURLY')
+    def CONDITIONAL(self, production):   
+        print("BOOLEAN VALUE IS REQUIRED")
