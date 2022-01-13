@@ -1,0 +1,8 @@
+a = 10;
+
+function foo(a) {
+	foo_var = 0;
+	c = a + 90;
+}
+
+foo(100);

@@ -1,0 +1,5 @@
+function foo() {
+	foo_var = 100;
+}
+
+t = foo_var + 10;

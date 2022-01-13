@@ -479,7 +479,12 @@ class CalcParser(Parser):
                 while( evaled_exp == True ):
                     print('------ Iteration ------')
                     loop_result = self.eval_ast(ast[2])
-                    if "BREAK" in loop_result:
+                    
+                    if(type(loop_result) == tuple):
+                        if "BREAK" in loop_result:
+                            print('--- Break While Loop ---')
+                            break
+                    elif "BREAK" == loop_result:
                         print('--- Break While Loop ---')
                         break
                     print('-----------------------')

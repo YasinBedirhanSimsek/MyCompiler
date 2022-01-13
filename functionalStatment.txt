@@ -1,0 +1,14 @@
+result = 0;
+
+function max(num1, num2) {
+   if (num1 > num2) 
+   {
+       result = num1;
+   }    
+   else 
+   {
+     result = num2;
+   };
+};
+
+max(3,5);
