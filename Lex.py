@@ -1,17 +1,18 @@
 from sly import Lexer
 from sly.lex import Token
+from sympy import true
 
 class CalcLexer(Lexer):
     # Set of token names. This is always required
     tokens = { 
         
         #Objects
-        ID, NUMBER, #STRING,
+        ID, NUMBER, 
          
         #SYMBOLS
         LPAREN, RPAREN, SEMI_COL,
         
-        LCURLY, RCURLY, COMMA, #DOUBLE_QUOTE,
+        LCURLY, RCURLY, COMMA, 
         
         #OPERATIONS
         PLUS, MINUS, TIMES, DIVIDE, ASSIGN, MOD, EXPONENT, 
@@ -44,7 +45,8 @@ class CalcLexer(Lexer):
 
     #Objects  
     ID      = r'[a-zA-Z_][a-zA-Z0-9_]*'
-    NUMBER  = r'\d+'
+    NUMBER  = r'[+-]?([0-9]*[.])?[0-9]+'
+
     #STRING  = r'\".*\"'
 
     #SYMBOLS
@@ -95,9 +97,18 @@ class CalcLexer(Lexer):
     ############################################################
 
     #Match Action
-    def NUMBER(self, t:Token):
-        t.value = int(t.value)
-        return t
+    def NUMBER(self, t:Token):      
+        try:
+            t.value = int(t.value)
+            return t
+        except:
+            pass
+
+        try:
+            t.value = float(t.value)
+            return t
+        except:
+            return None
 
     # Define a rule so we can track line numbers
     @_(r'\n+')

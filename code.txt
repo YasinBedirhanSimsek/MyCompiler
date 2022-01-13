@@ -1,0 +1,15 @@
+result = 0;
+
+function max(num1, num2) {
+
+    we = 1, rt = 10, qwer = 14.23;
+
+    if (num1 > num2) {
+        result = num1;
+    }
+    else {
+        result = num2;
+    }
+}
+
+max (3,5);

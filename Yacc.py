@@ -118,7 +118,13 @@ class CalcParser(Parser):
        'FUNCTION ID LPAREN PARAM_LIST RPAREN LCURLY STATEMENT_LIST RCURLY SEMI_COL')  
     def FUNCTION_DEFINITION(self, production):
 
+        param_dic = { } 
+
         node = production.STATEMENT_LIST
+
+        if(production.PARAM_LIST):
+            for k in production.PARAM_LIST:
+                param_dic[k] = None
 
         while(True):
 
@@ -133,7 +139,8 @@ class CalcParser(Parser):
         for i in range(self.allIDs_local_var_inc):
             self.allIDs.pop()
 
-        self.allIDs.append(production.ID)
+        if production.ID not in self.functions:
+            self.functions[production.ID] = (production.ID, production.PARAM_LIST, production.STATEMENT_LIST, param_dic)
 
         return ('NODE_FUNCTION_DEFINITION', production.ID, production.PARAM_LIST, production.STATEMENT_LIST)
 
@@ -169,8 +176,20 @@ class CalcParser(Parser):
     #FUNCTION_CALL : ID (VALUE_LIST) ;
     @_('ID LPAREN VALUE_LIST RPAREN SEMI_COL')  
     def FUNCTION_CALL(self, production):
-        if production.ID not in self.allIDs:
+        
+        if production.ID not in self.functions:
             print("Undefined Reference to " + production.ID + " at line " + str(production.lineno))
+
+        foo = self.functions[production.ID]
+
+        if(foo[1] and production.VALUE_LIST):
+            if(len(production.VALUE_LIST) != len(foo[1])):
+                print("Invalid paramater list to function " + production.ID + " at line " + str(production.lineno))  
+        elif foo[1] and not production.VALUE_LIST:
+            print("Invalid paramater list to function " + production.ID + " at line " + str(production.lineno))
+        elif not foo[1] and production.VALUE_LIST:
+            print("Invalid paramater list to function " + production.ID + " at line " + str(production.lineno))
+
         return ('NODE_FUNCTION_CALL', production.ID, production.VALUE_LIST)
 
     #VALUE_LIST : EMPTY
@@ -331,50 +350,97 @@ class CalcParser(Parser):
 
         elif(ast[0] == 'NODE_ASSIGNMENT'):
 
+            evaled_exp = self.eval_ast(ast[2]) 
+
             if(self.local_func_names == None):
-                self.variables[ast[1]] = self.eval_ast(ast[2]) 
+                if(ast[1] in self.variables):
+                    self.variables[ast[1]] = evaled_exp
+                    print("Global Variable "+ast[1] + " = " + str(evaled_exp))
+                else:
+                    self.variables[ast[1]] = evaled_exp
+                    print("New Global Variable "+ast[1] + " = " + str(evaled_exp))
+
                 return self.variables[ast[1]]
-        
+
             else:
                 #If There is a local variable
                 if ast[1] in self.local_func_names:
-                    self.local_func_names[ast[1]] = self.eval_ast(ast[2]) 
+                    self.local_func_names[ast[1]] = evaled_exp
+                    print("Local Variable "+ast[1] + " = " + str(evaled_exp))
                     return self.local_func_names[ast[1]]
                 #There was no local variable, check globals
                 elif ast[1] in self.variables:
-                    self.variables[ast[1]] = self.eval_ast(ast[2])
+                    self.variables[ast[1]] = evaled_exp
+                    print("Global Variable " + ast[1] + " = " + str(evaled_exp))
                     return self.variables[ast[1]]
                 #There was no id so create one in local variables
                 else:
-                    self.local_func_names[ast[1]] = self.eval_ast(ast[2]) 
+                    self.local_func_names[ast[1]] = evaled_exp
+                    print("New Local Variable "+ast[1] + " = " + str(evaled_exp))
                     return self.local_func_names[ast[1]]
 
         elif(ast[0] == 'NODE_ASSIGNMENT_EXP'): 
+
+            evaled_exp = self.eval_ast(ast[2]) 
+
             if(self.local_func_names == None):
-                self.variables[ast[1]] = self.eval_ast(ast[2]) 
+                if(ast[1] in self.variables):
+                    self.variables[ast[1]] = evaled_exp
+                    print("Global Variable "+ast[1] + " = " + str(evaled_exp))
+                else:
+                    self.variables[ast[1]] = evaled_exp
+                    print("New Global Variable "+ast[1] + " = " + str(evaled_exp))
                 return self.variables[ast[1]], self.eval_ast(ast[3]) 
         
             else:
                 #If There is a local variable
                 if ast[1] in self.local_func_names:
-                    self.local_func_names[ast[1]] = self.eval_ast(ast[2]) 
+                    self.local_func_names[ast[1]] = evaled_exp
+                    print("Local Variable "+ast[1] + " = " + str(evaled_exp))
                     return self.local_func_names[ast[1]], self.eval_ast(ast[3]) 
                 #There was no local variable, check globals
                 elif ast[1] in self.variables:
-                    self.variables[ast[1]] = self.eval_ast(ast[2])
+                    self.variables[ast[1]] = evaled_exp
+                    print("Global Variable " + ast[1] + " = " + str(evaled_exp))
                     return self.variables[ast[1]], self.eval_ast(ast[3]) 
                 #There was no id so create one in local variables
                 else:
-                    self.local_func_names[ast[1]] = self.eval_ast(ast[2]) 
+                    self.local_func_names[ast[1]] = evaled_exp
+                    print("New Local Variable "+ast[1] + " = " + str(evaled_exp))
                     return self.local_func_names[ast[1]], self.eval_ast(ast[3]) 
         
         #############################################
 
         elif(ast[0] == 'NODE_CONDITIONAL'):
-            return self.eval_ast(ast[2]) if (self.eval_ast(ast[1]) == True) else None
+            evaled_exp = self.eval_ast(ast[1])
+            if(evaled_exp == True):
+                print()
+                print('---IF BLOCK OK---')
+                evaled_exp = self.eval_ast(ast[2])
+                print('---IF BLOCK END---')
+                print()
+                return evaled_exp
+            else:
+                return None
 
         elif(ast[0] == 'NODE_CONDITIONAL_ELSE'):
-            return self.eval_ast(ast[2]) if (self.eval_ast(ast[1]) == True) else self.eval_ast(ast[3])
+
+            evaled_exp = self.eval_ast(ast[1])
+
+            if(evaled_exp == True):
+                print()
+                print('---IF BLOCK OK---')
+                evaled_exp = self.eval_ast(ast[2])
+                print('---IF BLOCK END---')
+                print()
+            else:
+                print()
+                print('---ELSE BLOCK OK---')
+                evaled_exp = self.eval_ast(ast[3])
+                print('---ELSE BLOCK END---')
+                print()
+
+            return evaled_exp
 
         elif(ast[0] == 'NODE_CONDITIONAL_ELSE_CONDITIONAL'):
             return self.eval_ast(ast[2]) if (self.eval_ast(ast[1]) == True) else self.eval_ast(ast[3])
@@ -382,31 +448,28 @@ class CalcParser(Parser):
         #############################################
 
         elif(ast[0] == 'NODE_WHILE'):
+            
             loop_result = None
 
-            while( self.eval_ast(ast[1]) == True ):
-                loop_result = self.eval_ast(ast[2]) 
-  
+            evaled_exp = self.eval_ast(ast[1])
+
+            if(evaled_exp == True):
+                print('\n---Start While Loop---')
+                while( evaled_exp == True ):
+                    print('------ Iteration ------')
+                    loop_result = self.eval_ast(ast[2])
+                    print('-----------------------')
+                    evaled_exp  = self.eval_ast(ast[1])
+                print('---Finish While Loop---\n')
+
             return loop_result
-           
+        
         #############################################
 
         elif(ast[0] == 'NODE_FUNCTIONAL'):
             return self.eval_ast(ast[1]) 
 
         elif(ast[0] == 'NODE_FUNCTION_DEFINITION'):
-
-            param_dic = { } 
-
-            if not ast[2]:
-                self.functions[ast[1]] = (ast[1], ast[2], ast[3], param_dic)
-                return
-
-            for k in ast[2]:
-                param_dic[k] = None
-
-            self.functions[ast[1]] = (ast[1], ast[2], ast[3], param_dic)
-
             return 
 
         elif(ast[0] == 'NODE_FUNCTION_CALL'):
@@ -423,9 +486,10 @@ class CalcParser(Parser):
                     i += 1
 
             self.local_func_names = foo[3]
+            print('\n---Function ' + ast[1] + ' Called---')
             f_result = self.eval_ast(foo[2])
             self.local_func_names = None
-
+            print('---Function ' + ast[1] + ' Ended---\n')
             return f_result
 
         #############################################
@@ -434,16 +498,12 @@ class CalcParser(Parser):
             if(self.local_func_names == None):
                 if ast[1] in self.variables:
                     return self.variables[ast[1]]
-                else:
-                    print("NO SUCH ID")
             else:
                 if ast[1] in self.local_func_names:
                     return self.local_func_names[ast[1]]
                 elif ast[1] in self.variables:
                     return self.variables[ast[1]]
-                else:
-                    print("NO SUCH ID")
-
+                
         elif(ast[0] == 'NODE_NUMBER'):
             return ast[1]
    
@@ -517,7 +577,6 @@ class CalcParser(Parser):
 
         print()
         print("EVALUATION RESULT")
-        print()
 
         x = None
 
@@ -526,7 +585,29 @@ class CalcParser(Parser):
         else:
             x = result
 
-        print(x)
+        '''
+        stack = []
+
+        stack.append(x)
+
+        ress = []
+
+        while (len(stack)):
+            s = stack[-1]
+            stack.pop()
+
+            if(type(s) != tuple):
+                ress.append(s)
+            else:
+                for n in s:
+                    stack.append(n)
+
+        ress.reverse()
+
+        for i in ress:
+            print()
+            print(i)
+        '''
 
         return x
 
