@@ -13,3 +13,4 @@ function max(num1, num2) {
 }
 
 max (3,5);
+

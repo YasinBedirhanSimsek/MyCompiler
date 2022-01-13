@@ -84,6 +84,10 @@ class CalcParser(Parser):
 
     ########################################################################################## 
 
+    @_('LOOP_BREAK SEMI_COL')
+    def STATEMENT_LIST(self, production):
+        return ('NODE_BREAK', production.LOOP_BREAK)
+
     #LOOP : WHILE ( BOOL_EXPRESSION ) { STATEMENT_LIST }
     @_('WHILE LPAREN BOOL_EXPRESSION RPAREN LCURLY STATEMENT_LIST RCURLY')
     def LOOP(self, production):
@@ -443,9 +447,26 @@ class CalcParser(Parser):
             return evaled_exp
 
         elif(ast[0] == 'NODE_CONDITIONAL_ELSE_CONDITIONAL'):
+
+            evaled_exp = self.eval_ast(ast[1])
+
+            if(evaled_exp == True):
+                print()
+                print('---IF BLOCK OK---')
+                evaled_exp = self.eval_ast(ast[2])
+                print('---IF BLOCK END---')
+                print()
+            else:
+                evaled_exp = self.eval_ast(ast[3])
+
+            return evaled_exp
+
             return self.eval_ast(ast[2]) if (self.eval_ast(ast[1]) == True) else self.eval_ast(ast[3])
         
         #############################################
+
+        elif(ast[0] == 'NODE_BREAK'):
+            return "BREAK"
 
         elif(ast[0] == 'NODE_WHILE'):
             
@@ -458,6 +479,9 @@ class CalcParser(Parser):
                 while( evaled_exp == True ):
                     print('------ Iteration ------')
                     loop_result = self.eval_ast(ast[2])
+                    if "BREAK" in loop_result:
+                        print('--- Break While Loop ---')
+                        break
                     print('-----------------------')
                     evaled_exp  = self.eval_ast(ast[1])
                 print('---Finish While Loop---\n')

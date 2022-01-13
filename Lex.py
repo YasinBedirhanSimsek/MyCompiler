@@ -25,7 +25,7 @@ class CalcLexer(Lexer):
         OR, AND, IS_NOT_EQUAL, IS_EQUAL,
 
         #LOOP
-        WHILE,
+        WHILE, LOOP_BREAK,
 
         #CONDITIONAL
         IF, ELSE,
@@ -90,6 +90,7 @@ class CalcLexer(Lexer):
 
     #LOOPS
     ID['while'] = WHILE
+    ID['break'] = LOOP_BREAK
 
     #Function
     ID['function'] = FUNCTION
