@@ -30,6 +30,10 @@ class CalcParser(Parser):
 
     ############################## Grammar rules and actions ##############################
 
+    #STATEMENT_LIST : STATEMENT STATEMENT_LIST
+
+    #STATEMENT_LIST : STATEMENT
+
     #STATEMENT : ASSIGNMENT
 
     #STATEMENT : EXPRESSION

@@ -15,10 +15,12 @@ if __name__ == '__main__':
     #f_path = 'simpleConditionalBlock.txt'
     #f_path = 'combinedLogic.txt'
     #f_path = 'whileLoopWithBreak.txt'
-    f_path = 'functionalStatment.txt'
+    #f_path = 'functionalStatment.txt'
     
-    with open(f_path) as f:
-        lines = f.read()
+    #with open(f_path) as f:
+    #    lines = f.read()
+
+    lines = 'a = 4;'
 
     while True:
         try:
